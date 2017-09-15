@@ -49,13 +49,18 @@
     <script src="https://d3js.org/d3.v4.js"></script>
 </head>
 <body>
-<input class="slider" type="range" min="10" max="100"/></body>
 <script>
 
     console.log(d3)
     const firstlayerNodes = [3, 5, 9]
 
     //  debugger;
+
+
+    //inputRange factory... give id from Node...
+    //eventListener updates node
+    //update() function that looks up id of SVG (from node) and changes value
+
 
     const Node = class {
         constructor(val, grad) {
@@ -64,16 +69,14 @@
         }
     }
 
-
-
     const unitsData = [{
-            name: 'a',
+            id: 'a',
             x: 200,
             y: 200,
             size: 20
         },
         {
-            name: 'b',
+            id: 'b',
             x: 200,
             y: 400,
             size: 20
@@ -81,7 +84,7 @@
     ]
 
     const gateData =[{
-        name: "mult1",
+        id: "mult1",
         x: 400,
         y: 300,
         size: 40
@@ -118,10 +121,14 @@
 
 
     const slider = d3.select('.slider');
-    slider.on('input', updateCirc)
+//    slider.on('input', updateCirc)
     console.log(slider, "val slide")
 
 
+
+    //create Slides
+    //2) attach to dom
+    //3) add eventlisteners
     function createSlider(node){
         const sl = document.createElement('input')
         sl.setAttribute('type', 'range')
@@ -129,10 +136,11 @@
         sl.style.position = 'absolute'
         sl.style.left = node.x + 'px'
         sl.style.top = node.y + 'px'
-        sl.setAttribute('id', node.name)
+        sl.setAttribute('id', node.id)
         sl.addEventListener('input', function() {
             node.size = +sl.value/5
             console.log(node.size)
+            updateNodeFromSlider(node, sl)
         })
         console.log(sl)
         return sl
@@ -147,8 +155,10 @@
     svg.style('width', window.innerWidth).style('height', window.innerHeight); //style instead of attr
 
 
-    const nodes = svg.selectAll('gr').data(unitsData).enter().append('g')
-        .attr('x', d=> d.x)
+    let nodes = svg.selectAll('gr')
+            .data(unitsData)
+            .enter().append('g')
+            .attr('x', d=> d.x)
         .attr('y', d => d.y)
 
 
@@ -156,9 +166,10 @@
 
     const c = nodes.append('circle');
 
-    c.merge(c).attr('cx', d => +d.x)
+    c.enter().merge(c).attr('cx', d => +d.x)
         .attr('cy', d => +d.y)
         .attr('r', d => +d.size)
+        .attr('id', d=> 'circle_' + d.id)
 
     c.each(function(node) {
 
@@ -216,6 +227,13 @@
                 console.log(svg.select("#check").node().checked);
             });
 
+    }
+
+    function updateNodeFromSlider(node,sli){ //only update the
+//        if (sli.id === node.id){
+            d3.selectAll(`#circle_${node.id}`)
+                .attr("r", node.size)
+//        }
     }
 
     function updateCirc() {
