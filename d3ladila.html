@@ -17,9 +17,10 @@
         }
 
         text {
-            font-size: 20px;
+            font-size: 40px;
             font-family: Helvetica;
-            fill: red;
+            fill: white;
+
             text-anchor: middle;
             text-align: center;
         }
@@ -52,7 +53,8 @@
 <script>
 
 
-    const unitsData = [{
+    const unitsData = [
+        {
             id: 'a',
             x: 200,
             y: 200,
@@ -64,14 +66,26 @@
             y: 400,
             size: 20
         }
-    ]
+    ];
 
-    const gateData =[{
-        id: "mult1",
-        x: 400,
+    const outputNode = [{
+        id:'output',
+        x: 700,
         y: 300,
         size: 40
     }]
+
+    const gateData = [{
+        id: "mult1",
+        size: 40,
+        x: 400,
+        y: 300,
+        calcSize(connectors = unitsData){
+            this.size = connectors.reduce( (acc, val) => acc + val.size, 0)
+        }
+    }]
+
+
 
 
     const lineFn = d3.line()
@@ -83,8 +97,14 @@
         })
         .curve(d3.curveLinear);
 
+
+    //TODO classes that go in arrays...with
+
+
     //GateMaker factory
     //Node maker
+
+
 
     //1)create Slides
     //2) attach to dom
@@ -92,10 +112,9 @@
 
     const l = unitsData
         .map(createSlider)
-        .map(sl => sl.addEventListener('input'))
         .map(e => document.body.appendChild(e))
 
-    function createSlider(node){
+    function createSlider(node) {
         const sl = document.createElement('input')
         sl.setAttribute('type', 'range')
         sl.setAttribute('class', 'slider')
@@ -103,10 +122,11 @@
         sl.style.left = node.x + 'px'
         sl.style.top = node.y + 'px'
         sl.setAttribute('id', node.id)
-        sl.addEventListener('input', function() {
-            node.size = +sl.value/5
+        sl.addEventListener('input', function () {
+            node.size = +sl.value / 5
             console.log(node.size)
             updateNodeFromSlider(node, sl)
+            gateData[0].calcSize(unitsData)
         })
         console.log(sl)
         return sl
@@ -119,9 +139,9 @@
 
 
     let nodes = svg.selectAll('gr')
-            .data(unitsData)
-            .enter().append('g')
-            .attr('x', d=> d.x).attr('y', d => d.y)
+        .data(unitsData)
+        .enter().append('g')
+        .attr('x', d => d.x).attr('y', d => d.y)
 
 
     const c = nodes.append('circle');
@@ -129,16 +149,32 @@
     c.enter().merge(c).attr('cx', d => +d.x)
         .attr('cy', d => +d.y)
         .attr('r', d => +d.size)
-        .attr('id', d=> 'circle_' + d.id)
+        .attr('id', d => 'circle_' + d.id)
 
-    c.each(function(node) {
+    c.each(function (node) {
 
         console.log(node, this);
 
     })
 
+
+    const outputG = svg.selectAll('.output').data(outputNode).enter().append('g').attr('x', d => d.x).attr('y', d => d.y)
+
+
+    outputG.append('rect')
+        .attr('x', d => d.x)
+        .attr('y', d => d.y)
+        .attr('width', d => d.size)
+        .attr('height', d => d.size)
+
+    outputG.append('text')
+        .attr('x', d => d.x)
+        .attr('y', d => d.y)
+        .attr("dy", ".35em")
+        .text("output")
+
     const textNode = nodes.append('text')
-        .attr('x', d=> d.x)
+        .attr('x', d => d.x)
         .attr('y', d => d.y)
         .attr("dy", ".35em")
         .classed('text', true)
@@ -155,24 +191,34 @@
         .attr('height', d => d.size)
 
     const text = gates.append("text")
-        .attr('x', d=> d.x)
+        .attr('x', d => d.x)
         .attr('y', d => d.y)
-        .attr("dy", ".35em")
+        .attr("dy", d=> d.size/1.5 + "px")
+        .attr("dx", d=> d.size/2 + "px")
         .classed('text', true)
-        .text("YOLO")
+        .text("+")
 
-    const path1 = svg.selectAll('.line').data([0]).enter()
+    const path1 = svg.selectAll('.line').data(unitsData).enter()
         .append('path')
-        .attr("d", lineFn([unitsData[0], gateData[0]]))
-        .classed('line',true)
+        .attr("d", d => lineFn([d, {
+            x: gateData[0].x + gateData[0].size/2,
+            y: gateData[0].y + gateData[0].size/2
+        }]))
+        .classed('line', true)
 
-    function updateNodeFromSlider(node,sli){ //only update the
-//        if (sli.id === node.id){
-            d3.selectAll(`#circle_${node.id}`)
-                .attr("r", node.size)
-//        }
+    const path2 = svg.selectAll('.line2').data(gateData).enter()
+        .append('path')
+        .attr('d', d => lineFn([d, {
+            x: outputNode[0].x + outputNode[0].size/2,
+            y: outputNode[0].y + outputNode[0].size/2
+        }]))
+        .classed('line', true)
+
+
+    function updateNodeFromSlider(node, sli) { //only update the
+        d3.selectAll(`#circle_${node.id}`)
+            .attr("r", node.size)
     }
-
 
 
 </script>
