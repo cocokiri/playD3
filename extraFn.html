@@ -1,0 +1,70 @@
+<html>
+<body>
+<script>
+
+    console.log(d3)
+    const firstlayerNodes = [3, 5, 9]
+
+    //  debugger;
+
+
+    //inputRange factory... give id from Node...
+    //eventListener updates node
+    //update() function that looks up id of SVG (from node) and changes value
+
+
+    const Node = class {
+        constructor(val, grad) {
+            this.value = val;
+            this.gradient = grad;
+        }
+    }
+
+    const circles = svg.selectAll('circle')
+        .data(firstlayerNodes)
+        .enter()
+        .append('circle')
+
+
+    const Gate_multiply = class { //or call Neuron
+        constructor() {
+        }
+        forward(nodeA, nodeB) {
+            this.nodeA = nodeA;
+            this.nodeB = nodeB;
+            this.nodeTop = new Node(nodeA.value * nodeB.value, 0)
+        }
+        backward(){//derivative of xy ref x = x; that's why x ==> y
+            // take the gradient in output unit and chain it with the
+            // local gradients, which we derived for multiply gate before
+            // then write those gradients to those Units.
+            this.nodeA.gradient += this.nodeB.value * this.nodeTop.gradient;
+            this.nodeB.gradient += this.nodeA.value * this.nodeTop.gradient;
+        }
+    }
+
+    updateCirc()
+
+    function forEignObjBS(){
+        var svg = d3.select("svg").append("svg")
+            .attr("width", 100)
+            .attr("height", 100);
+
+        svg.append("foreignObject")
+            .attr("width", 100)
+            .attr("height", 100)
+            .html("<input type=checkbox id=check />")
+            .on("click", function(d, i){
+                console.log(svg.select("#check").node().checked);
+            });
+
+    }
+
+
+    function updateCirc() {
+        circles.attr('cx', 50).attr('cy', (d, i) => i * 100).attr('r', d => +slider.property('value') / 10 * d)
+    }
+
+</script>
+</body>
+</html>
