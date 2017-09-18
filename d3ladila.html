@@ -72,9 +72,10 @@
 
             this.x = nodeA.x + 200;
             this.y = this.nodeA.y/2 + this.nodeB.y/2;
+            this.value = this.nodeA.value + this.nodeB.value
 
-            this.outputNode = new Node({
-                value: this.nodeA.value + this.nodeB.value,
+            this.outputNode = new Node({ //only value transfer at this stage, no reference
+                value: this.value,
 
                 id: `sum_${this.nodeA.id}${this.nodeB.id}`,
                 x: this.nodeA.x + 420,
@@ -101,44 +102,12 @@
 
     console.log(a,b,addGate, outputAB)
 
-    const unitsData = [
-        {
-            id: 'a',
-            x: 200,
-            y: 200,
-            value: 20
-        },
-        {
-            id: 'b',
-            x: 200,
-            y: 400,
-            value: 20
-        }
-    ];
-
-    const outputNode = [{
-        id: 'output',
-        x: 700,
-        y: 300,
-        value: 40
-    }]
-
-    const gateData = [{
-        id: "mult1",
-        value: 40,
-        x: 400,
-        y: 300,
-        assignValue(connectors = unitsData) {
-            this.value = connectors.reduce((acc, val) => acc + val.value, 0)
-        }
-    }]
-
     const lineFn = d3.line()
         .x(function (d) {
-            return d.x;
+            return d.x + d.value/2;
         })
         .y(function (d) {
-            return d.y;
+            return d.y + d.value/2;
         })
         .curve(d3.curveLinear);
 
@@ -183,15 +152,54 @@
 
     svg.style('width', window.innerWidth * 0.9).style('height', window.innerHeight * 0.9); //style instead of attr
 
+    const dragState = {
+        dragging: false,
+        end: false,
+        deltaY: 0,
+        startY: 0
+    }
+
+    window.onmouseup = function(ev){ //can't be inside svg because ...whe
+        ev.preventDefault();
+        dragState.dragging = false;
+        dragState.deltaY = 0;
+    }
 
     let nodesG = svg.selectAll('gr')
         .data(inputNodes)
         .enter().append('g')
-        .attr('transform', d => `translate(${d.x}, ${d.y})`);
+        .attr('transform', d => `translate(${d.x}, ${d.y})`)
+        .on('mousedown', function(){
+            event.preventDefault();
+            dragState.dragging = true;
+            dragState.startY = event.clientY;
+            console.log(d3.event)
+        })
+        .on('mouseup', function(){
+            event.preventDefault();
+            dragState.dragging = false;
+            dragState.deltaY = 0;
+        })
+        .on('mousemove', function(d) {
+            if (!dragState.dragging) {return}
+            event.preventDefault()
+            if (dragState.dragging) {
+                dragState.deltaY = dragState.startY - event.clientY
+                console.log(dragState.deltaY)
+            }
+
+            d.value += dragState.deltaY/20;
+            if (d.value < 0) {
+                d.value = 0
+            }
+            dragState.deltaY = 0;
+            updateNodeFromSlider(d)
+        })
 
     const nodes = nodesG.append('circle')
-        .attr('r', d => +d.value)
+        .attr('r', d => 30)
         .attr('id', d => 'circle_' + d.id)
+
 
     let textNode = nodesG.append('text')
         .attr("dy", ".35em")
@@ -201,20 +209,23 @@
     const gates = svg.selectAll('.gates').data( [addGate] )
         .enter().append('g')
         .attr('transform', d => `translate(${d.x}, ${d.y})`)
+        .on('dragstart', d => console.log('hallo'))
 
     const rect = gates.append('rect')
-        .attr('width', d => 30)
-        .attr('height', d => 30)
+        .attr('width', d => 60)
+        .attr('height', d => 60)
 
 
     const text = gates.append("text") //TODO text always latest to be over other elems
-        .attr("dy", d => d.value / 1.5 + "px")
-        .attr("dx", d => d.value / 2 + "px")
+        .attr("dx", d => rect.attr('width') /2)
+        .attr("dy", d => rect.attr('height') / 1.5)
         .classed('text', true)
         .text("+")
 
+    console.log(text)
+    console.log(gates)
 
-    const outputG = svg.selectAll('.output').data(outputNode)
+    const outputG = svg.selectAll('.output').data( [outputAB] )
         .enter().append('g')
         .attr('transform', (d, i) => `translate(${d.x}, ${d.y})`) //-- g doesn't do x, y coords...translate needed
     //NOW ALL CHILDREN ARE POSITIONED RELATIVE --- NO NEED TO SET ABSOLUTE VALUES
@@ -234,21 +245,28 @@
         console.log(textNode.enter())
     }
 
-    const path1 = svg.selectAll('.line').data(unitsData).enter()
+    const path1 = svg.selectAll('.line').data(inputNodes).enter()
         .append('path')
-        .attr("d", d => lineFn([d, gateData[0]]))
+        .attr("d", d => lineFn([d, addGate]))
         .classed('line', true)
 
-    const path2 = svg.selectAll('.line2').data(gateData).enter()
+    const path2 = svg.selectAll('.line2').data( [addGate] ).enter()
         .append('path')
-        .attr('d', d => lineFn([d, outputNode[0]]))
+        .attr('d', d => lineFn([d, outputAB]))
         .classed('line', true)
 
     update();
 
+
+    function draggingInput(d) {
+        var x = d3.event.x;
+        var y = d3.event.y;
+        d3.select(this).attr("transform", "translate(" + x + "," + y + ")");
+    }
+
     function updateNodeFromSlider(node) { //only update the
         d3.selectAll(`#circle_${node.id}`)
-            .attr("r", node.value * 2)
+            .style("fill-opacity", `${node.value/20}`)
 
         outputG
             .attr('width', d => d.value)
