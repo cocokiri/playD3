@@ -52,36 +52,84 @@
 <body>
 <script>
 
+    const Node = class { //saves in object to have memory off variables (assignment by reference)...
+        constructor({id, value = 20, gradient = 0, x = 200, y = 200}) {
+            this.id = id;
+            this.value = value;
+            this.gradient = gradient;
+            this.x = x;
+            this.y = y
+        }
+    }
+
+    const Gate_add = class { //or call Neuron
+        constructor() {
+        }
+
+        forward(nodeA, nodeB) {
+            this.nodeA = nodeA;
+            this.nodeB = nodeB;
+
+            this.x = nodeA.x + 200;
+            this.y = this.nodeA.y/2 + this.nodeB.y/2;
+
+            this.outputNode = new Node({
+                value: this.nodeA.value + this.nodeB.value,
+
+                id: `sum_${this.nodeA.id}${this.nodeB.id}`,
+                x: this.nodeA.x + 420,
+                y: this.nodeA.y/2 + this.nodeB.y/2 //between the two
+            }, 0)
+            return this.outputNode;
+        }
+
+        backward() {//derivative of xy ref x = x; that's why x ==> y
+            // take the gradient in output unit and chain it with the
+            // local gradients, which we derived for multiply gate before
+            // then write those gradients to those Units.
+            this.nodeA.gradient += 1 * this.outputNode.gradient; //f(x) = x + y; f`(x/dx) = 1
+            this.nodeB.gradient += 1 * this.outputNode.gradient;
+        }
+    }
+
+    const a = new Node({id:'a'})
+    const b = new Node({id:'b', y:400})
+
+    const addGate = new Gate_add();
+
+    const outputAB = addGate.forward(a,b)
+
+    console.log(a,b,addGate, outputAB)
 
     const unitsData = [
         {
             id: 'a',
             x: 200,
             y: 200,
-            size: 20
+            value: 20
         },
         {
             id: 'b',
             x: 200,
             y: 400,
-            size: 20
+            value: 20
         }
     ];
 
     const outputNode = [{
-        id:'output',
+        id: 'output',
         x: 700,
         y: 300,
-        size: 40
+        value: 40
     }]
 
     const gateData = [{
         id: "mult1",
-        size: 40,
+        value: 40,
         x: 400,
         y: 300,
-        calcSize(connectors = unitsData){
-            this.size = connectors.reduce( (acc, val) => acc + val.size, 0)
+        assignValue(connectors = unitsData) {
+            this.value = connectors.reduce((acc, val) => acc + val.value, 0)
         }
     }]
 
@@ -102,12 +150,13 @@
     //Node maker
 
 
-
     //1)create Slides
     //2) attach to dom
     //3) add eventlisteners
 
-    const l = unitsData //TODO replace with simple node drag to change value
+    const inputNodes = [a,b]
+
+    const l = inputNodes //TODO replace with simple node drag to change value
         .map(createSlider)
         .map(e => document.body.appendChild(e))
 
@@ -120,10 +169,10 @@
         sl.style.top = node.y + 'px'
         sl.setAttribute('id', node.id)
         sl.addEventListener('input', function () {
-            node.size = +sl.value / 5
-            console.log(node.size)
+            node.value = +sl.value / 5
+            console.log(node.value)
             updateNodeFromSlider(node, sl)
-            gateData[0].calcSize(unitsData)
+            gateData[0].assignValue(unitsData)
         })
         console.log(sl)
         return sl
@@ -136,55 +185,52 @@
 
 
     let nodesG = svg.selectAll('gr')
-        .data(unitsData)
+        .data(inputNodes)
         .enter().append('g')
-            .attr('transform', d => `translate(${d.x}, ${d.y})`);
+        .attr('transform', d => `translate(${d.x}, ${d.y})`);
 
     const nodes = nodesG.append('circle')
-            .attr('r', d => +d.size)
-            .attr('id', d => 'circle_' + d.id)
+        .attr('r', d => +d.value)
+        .attr('id', d => 'circle_' + d.id)
 
     let textNode = nodesG.append('text')
         .attr("dy", ".35em")
         .classed('text', true)
-        .html(d => d.size || "A")
+        .html(d => d.value || "A")
 
-
-
-    const outputG = svg.selectAll('.output').data(outputNode)
-        .enter().append('g')
-        .attr('transform', (d,i) => `translate(${d.x}, ${d.y})`) //-- g doesn't do x, y coords...translate needed
-        //NOW ALL CHILDREN ARE POSITIONED RELATIVE --- NO NEED TO SET ABSOLUTE VALUES
-
-    outputG.append('rect')
-        .attr('width', d => d.size)
-        .attr('height', d => d.size)
-
-    outputG.append('text')
-        .attr("dy", ".35em")
-        .text("output")
-
-
-    const gates = svg.selectAll('.gates').data(gateData)
+    const gates = svg.selectAll('.gates').data( [addGate] )
         .enter().append('g')
         .attr('transform', d => `translate(${d.x}, ${d.y})`)
 
-
     const rect = gates.append('rect')
-        .attr('width', d => d.size)
-        .attr('height', d => d.size)
+        .attr('width', d => 30)
+        .attr('height', d => 30)
 
 
     const text = gates.append("text") //TODO text always latest to be over other elems
-        .attr("dy", d=> d.size/1.5 + "px")
-        .attr("dx", d=> d.size/2 + "px")
+        .attr("dy", d => d.value / 1.5 + "px")
+        .attr("dx", d => d.value / 2 + "px")
         .classed('text', true)
         .text("+")
 
 
-    function update(){
-        outputG.select('rect').attr('height', d => d.size)
-        textNode.html(d => Math.round(d.size));
+    const outputG = svg.selectAll('.output').data(outputNode)
+        .enter().append('g')
+        .attr('transform', (d, i) => `translate(${d.x}, ${d.y})`) //-- g doesn't do x, y coords...translate needed
+    //NOW ALL CHILDREN ARE POSITIONED RELATIVE --- NO NEED TO SET ABSOLUTE VALUES
+
+    outputG.append('rect')
+        .attr('width', d => d.value)
+        .attr('height', d => d.value)
+
+    outputG.append('text')
+        .attr("dy", ".35em")
+        .text(d=> d.value)
+
+
+    function update() {
+        outputG.select('rect').attr('height', d => d.value)
+        textNode.html(d => Math.round(d.value));
         console.log(textNode.enter())
     }
 
@@ -195,14 +241,19 @@
 
     const path2 = svg.selectAll('.line2').data(gateData).enter()
         .append('path')
-        .attr('d', d => lineFn([d,outputNode[0]]))
+        .attr('d', d => lineFn([d, outputNode[0]]))
         .classed('line', true)
 
     update();
 
     function updateNodeFromSlider(node) { //only update the
         d3.selectAll(`#circle_${node.id}`)
-            .attr("r", node.size * 2)
+            .attr("r", node.value * 2)
+
+        outputG
+            .attr('width', d => d.value)
+            .attr('height', d => d.value)
+
 
         update();
 

@@ -32,14 +32,14 @@
         forward(nodeA, nodeB) {
             this.nodeA = nodeA;
             this.nodeB = nodeB;
-            this.nodeTop = new Node(nodeA.value * nodeB.value, 0)
+            this.outputNode = new Node(nodeA.value * nodeB.value, 0)
         }
         backward(){//derivative of xy ref x = x; that's why x ==> y
             // take the gradient in output unit and chain it with the
             // local gradients, which we derived for multiply gate before
             // then write those gradients to those Units.
-            this.nodeA.gradient += this.nodeB.value * this.nodeTop.gradient;
-            this.nodeB.gradient += this.nodeA.value * this.nodeTop.gradient;
+            this.nodeA.gradient += this.nodeB.value * this.outputNode.gradient;
+            this.nodeB.gradient += this.nodeA.value * this.outputNode.gradient;
         }
     }
 
