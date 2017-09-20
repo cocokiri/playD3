@@ -12,6 +12,46 @@
     //eventListener updates node
     //update() function that looks up id of SVG (from node) and changes value
 
+
+    window.onmouseup = function (ev) { //can't be inside svg because ...whe
+        ev.preventDefault();
+        dragState.dragging = false;
+        dragState.deltaY = 0;
+    }
+
+    let nodesG = svg.selectAll('gr')
+        .data(startData)
+        .enter().append('g')
+        .attr('transform', d => `translate(${d.x}, ${d.y})`)
+        .on('mousedown', function () {
+            event.preventDefault();
+            dragState.dragging = true;
+            dragState.startY = event.clientY;
+            console.log(d3.event)
+        })
+        .on('mouseup', function () {
+            event.preventDefault();
+            dragState.dragging = false;
+            dragState.deltaY = 0;
+        })
+        .on('mousemove', function (d) {
+            if (!dragState.dragging) {
+                return
+            }
+            event.preventDefault()
+            if (dragState.dragging) {
+                dragState.deltaY = dragState.startY - event.clientY
+                console.log(dragState.deltaY)
+            }
+
+            d.value += dragState.deltaY / 20;
+            if (d.value < 0) {
+                d.value = 0
+            }
+            dragState.deltaY = 0;
+            updateNodeFromSlider(d)
+        })
+
     const unitsData = [
         {
             id: 'a',
@@ -53,6 +93,12 @@
         .enter()
         .append('circle')
 
+    const dragState = {
+        dragging: false,
+        end: false,
+        deltaY: 0,
+        startY: 0
+    }
 
     const Gate_multiply = class { //or call Neuron
         constructor() {
@@ -71,6 +117,17 @@
         }
     }
 
+
+    const lineFn = d3.line()
+        .x(function (d) {
+            return d.x + d.value / 2;
+        })
+        .y(function (d) {
+            return d.y + d.value / 2;
+        })
+        .curve(d3.curveLinear);
+
+
     updateCirc()
 
     function forEignObjBS(){
@@ -88,6 +145,57 @@
 
     }
 
+
+
+    function sigmoidPath2(d) { // topNode = parent, utop...
+
+        //TODO always start the path with the parent --> child
+        return "M" + d.x + "," + d.y
+            + "C" + (d.x + d.parent.x) / 2 + "," + d.y
+            + " " + (d.x + d.parent.x) / 2 + "," + d.parent.y
+            + " " + d.parent.x + "," + d.parent.y;
+    };
+
+
+    const testo = {
+        x: 500,
+        y: 200,
+        parent: { //TODO this should be child
+            x: 800,
+            y: 500
+        }
+    }
+
+    const testpath = sigmoidPath2(testo)
+
+
+    var color = d3.interpolateLab("pink", "purple")//d3.interpolateRgb;
+
+    const thenode = d3.select('svg').append('path').attr('d', testpath).remove()
+
+    const splicedup = quads(samples(thenode.node(), 8))
+
+    const nodepath = d3.select('svg').selectAll('jew').data(splicedup).enter().append("path")
+
+    nodepath
+        .style("fill", function (d) {
+            return color(d.t);
+        })
+        .style("stroke", function (d) {
+            return color(d.t);
+        })
+        .attr("stroke-width", d => 10 - 10 * d.t)
+        .attr("stroke-opacity", 0.3)
+        .attr("d", function (d) {
+            return lineJoin(d[0], d[1], d[2], d[3], 16 - 15 * d.t);
+        });
+
+
+    function draggingInput(d) {
+        var x = d3.event.x;
+        var y = d3.event.y;
+        d3.select(this).attr("transform", "translate(" + x + "," + y + ")");
+    }
 
     function updateCirc() {
         circles.attr('cx', 50).attr('cy', (d, i) => i * 100).attr('r', d => +slider.property('value') / 10 * d)

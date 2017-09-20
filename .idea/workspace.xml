@@ -4,6 +4,7 @@
     <list default="true" id="79ba1a1f-8bd8-4064-855b-b40a03d4b83b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/d3ladila.html" afterPath="$PROJECT_DIR$/d3ladila.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/extraFn.html" afterPath="$PROJECT_DIR$/extraFn.html" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -20,9 +21,11 @@
       <file leaf-file-name="d3ladila.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/d3ladila.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="259">
-              <caret line="298" column="45" lean-forward="false" selection-start-line="298" selection-start-column="45" selection-end-line="298" selection-end-column="45" />
-              <folding />
+            <state relative-caret-position="1289">
+              <caret line="306" column="57" lean-forward="false" selection-start-line="306" selection-start-column="57" selection-end-line="306" selection-end-column="57" />
+              <folding>
+                <element signature="n#style#0;n#head#0;n#html#0;n#!!top" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -30,7 +33,7 @@
       <file leaf-file-name="gradientSchabernak.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gradientSchabernak.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-163">
+            <state relative-caret-position="-41">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
@@ -40,8 +43,8 @@
       <file leaf-file-name="extraFn.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/extraFn.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="42" column="6" lean-forward="false" selection-start-line="42" selection-start-column="6" selection-end-line="42" selection-end-column="6" />
+            <state relative-caret-position="317">
+              <caret line="101" column="0" lean-forward="true" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -50,7 +53,7 @@
       <file leaf-file-name="index copy.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../index copy.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1365">
+            <state relative-caret-position="824">
               <caret line="91" column="46" lean-forward="false" selection-start-line="91" selection-start-column="46" selection-end-line="91" selection-end-column="46" />
               <folding />
             </state>
@@ -70,8 +73,8 @@
       <file leaf-file-name="gradientStroke.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="113" column="3" lean-forward="true" selection-start-line="113" selection-start-column="3" selection-end-line="120" selection-end-column="5" />
+            <state relative-caret-position="1695">
+              <caret line="113" column="3" lean-forward="false" selection-start-line="113" selection-start-column="3" selection-end-line="120" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -81,7 +84,7 @@
         <entry file="file://$PROJECT_DIR$/../testing/js/index.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="3690">
-              <caret line="246" column="10" lean-forward="true" selection-start-line="246" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
+              <caret line="246" column="10" lean-forward="false" selection-start-line="246" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -91,18 +94,24 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>line</find>
       <find>change data</find>
       <find>unitsdata</find>
-      <find>linefn</find>
       <find>size</find>
       <find>calcSize</find>
       <find>output</find>
       <find>outputnode</find>
-      <find>path</find>
       <find>svg</find>
       <find>gradien</find>
       <find>test</find>
+      <find>outputG</find>
+      <find>outputAB</find>
+      <find>path</find>
+      <find>nodesG</find>
+      <find>linefn</find>
+      <find>.line</find>
+      <find>forward</find>
+      <find>line</find>
+      <find>sigmoid</find>
     </findStrings>
     <replaceStrings>
       <replace>value</replace>
@@ -117,9 +126,9 @@
       <list>
         <option value="$PROJECT_DIR$/../d3-pedigree-examples/basic-long-names.html" />
         <option value="$PROJECT_DIR$/../index copy.html" />
-        <option value="$PROJECT_DIR$/extraFn.html" />
         <option value="$PROJECT_DIR$/../testing/gradientStroke.html" />
         <option value="$PROJECT_DIR$/gradientSchabernak.html" />
+        <option value="$PROJECT_DIR$/extraFn.html" />
         <option value="$PROJECT_DIR$/d3ladila.html" />
       </list>
     </option>
@@ -157,8 +166,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -170,6 +177,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -228,12 +237,34 @@
       <workItem from="1505808851063" duration="5000" />
       <workItem from="1505808857023" duration="1737000" />
       <workItem from="1505810667011" duration="3000" />
-      <workItem from="1505824215229" duration="1308000" />
+      <workItem from="1505824215229" duration="1459000" />
+      <workItem from="1505844769734" duration="2000" />
+      <workItem from="1505844772885" duration="1694000" />
+      <workItem from="1505846578072" duration="2000" />
+      <workItem from="1505846581216" duration="461000" />
+      <workItem from="1505895737999" duration="2000" />
+      <workItem from="1505895741089" duration="1691000" />
+      <workItem from="1505898188843" duration="2000" />
+      <workItem from="1505898191788" duration="791000" />
+      <workItem from="1505900033741" duration="1000" />
+      <workItem from="1505900036415" duration="1044000" />
+      <workItem from="1505903089389" duration="1000" />
+      <workItem from="1505903092389" duration="174000" />
+      <workItem from="1505906317850" duration="2000" />
+      <workItem from="1505906321491" duration="1482000" />
+      <workItem from="1505908163253" duration="2000" />
+      <workItem from="1505908166164" duration="779000" />
+      <workItem from="1505934254535" duration="5000" />
+      <workItem from="1505934260666" duration="1626000" />
+      <workItem from="1505936070702" duration="5000" />
+      <workItem from="1505936076849" duration="1780000" />
+      <workItem from="1505937916601" duration="2000" />
+      <workItem from="1505937919628" duration="1125000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18074000" />
+    <option name="totallyTimeSpent" value="30898000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1900" height="973" extended-state="0" />
@@ -242,6 +273,7 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32963374" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -253,7 +285,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -302,7 +333,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3255">
           <caret line="217" column="38" lean-forward="false" selection-start-line="217" selection-start-column="38" selection-end-line="217" selection-end-column="38" />
-          <folding />
+          <folding>
+            <element signature="n#style#0;n#head#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -348,7 +381,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="n#style#0;n#head#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -386,7 +421,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="n#style#0;n#head#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -424,7 +461,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="n#style#0;n#head#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -455,7 +494,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="n#style#0;n#head#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -493,7 +534,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="n#style#0;n#head#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -531,7 +574,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="720">
           <caret line="48" column="21" lean-forward="true" selection-start-line="48" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="n#style#0;n#head#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -574,22 +619,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../testing/gradient2.html" />
-    <entry file="file://$PROJECT_DIR$/../testing/js/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3690">
-          <caret line="246" column="10" lean-forward="true" selection-start-line="246" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../index copy.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1365">
-          <caret line="91" column="46" lean-forward="false" selection-start-line="91" selection-start-column="46" selection-end-line="91" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../testing/gradients.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -605,43 +634,54 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/extraFn.html">
+    <entry file="file://$PROJECT_DIR$/gradientSchabernak.html" />
+    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="42" column="6" lean-forward="false" selection-start-line="42" selection-start-column="6" selection-end-line="42" selection-end-column="6" />
+        <state relative-caret-position="1695">
+          <caret line="113" column="3" lean-forward="false" selection-start-line="113" selection-start-column="3" selection-end-line="120" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gradientSchabernak.html">
+    <entry file="file://$PROJECT_DIR$/../testing/js/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-121">
-          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        <state relative-caret-position="3690">
+          <caret line="246" column="10" lean-forward="false" selection-start-line="246" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../index copy.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="824">
+          <caret line="91" column="46" lean-forward="false" selection-start-line="91" selection-start-column="46" selection-end-line="91" selection-end-column="46" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gradientSchabernak.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-163">
+        <state relative-caret-position="-41">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html">
+    <entry file="file://$PROJECT_DIR$/extraFn.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="113" column="3" lean-forward="true" selection-start-line="113" selection-start-column="3" selection-end-line="120" selection-end-column="5" />
+        <state relative-caret-position="317">
+          <caret line="101" column="0" lean-forward="true" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/d3ladila.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="298" column="45" lean-forward="false" selection-start-line="298" selection-start-column="45" selection-end-line="298" selection-end-column="45" />
-          <folding />
+        <state relative-caret-position="1289">
+          <caret line="306" column="57" lean-forward="false" selection-start-line="306" selection-start-column="57" selection-end-line="306" selection-end-column="57" />
+          <folding>
+            <element signature="n#style#0;n#head#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
