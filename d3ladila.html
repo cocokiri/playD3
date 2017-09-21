@@ -75,7 +75,8 @@
                 level: this.level + 1,
                 x: this.x,
                 id: `output`,
-                y: this.y //between the two
+                y: this.y, //between the two
+                to: []
             }, 0);
         }
 
@@ -164,10 +165,10 @@
                 ...startData
             ],
             [
-                new Gate_add()
+                new Gate_add({level:2})
             ],
             [
-                new Gate_add()
+                new Gate_add({x: 900, y: 400, level:3})
             ]
         ],
         resultNode: new Node(
@@ -184,7 +185,7 @@
                 }
                 layer.forEach(function (node) {
                     if (node.id.indexOf('gate') > -1){
-                        layers[idx+1].forEach(next => node.output.connectTo(next, node.output))
+                        layers[idx+1].forEach(next => node.output.connectTo(next, node.output)) //node = gate
                     }
                     else {
                         layers[idx+1].forEach(next => node.connectTo(next, node)) //basically just case for the inputs...refactor...
@@ -226,18 +227,6 @@
 
     //keep the neuron stupid
 
-    function sigmoidLine(d = { //draws the opposite way
-        from: {x: 100, y: 100},
-        to: {x: 500, y: 900}
-    }) { // topNode = parent, utop...
-        const t = d.from;
-        const f = d.to;
-        //TODO always start the path with the parent --> child
-        return "M" + f.x + "," + f.y
-            + "C" + (f.x + t.x) / 2 + "," + f.y
-            + " " + (f.x + t.x) / 2 + "," + t.y
-            + " " + t.x + "," + t.y;
-    };
 
 
 //    const addGate = new Gate_add(2);
@@ -279,7 +268,9 @@
 
     function drawGraphNodes(layers, container){
         layers.forEach(function(layer){
-            let nodesG = svg.selectAll('gr').data(layer).enter().append('g').attr('transform', d => `translate(${d.x}, ${d.y})`)
+            let nodesG = svg.selectAll('gr').data(layer).enter()
+                .append('g')
+                .attr('transform', d => `translate(${d.x}, ${d.y})`)
 
             const nodes = nodesG.append('rect')
                 .attr('width', d => 60)
@@ -297,9 +288,6 @@
                 .html(d => d.value || "A")
         })
     }
-
-    drawGraphNodes(Graph.layers, svg)
-
     const areaGradient = svg.append("defs")
         .append("linearGradient")
         .attr("id", "areaGradient")
@@ -317,26 +305,51 @@
 
 
 
-    console.log(text)
-    console.log(gates)
+    function drawGraphLinks(layers, container){ //requires the nodes to be linked up
 
+        layers.forEach(function(layer,i){
+            console.log(layer)
+            const path = svg.selectAll('.line' + i).data(layer).enter()
+                .append('path')
+
+
+                .attr("d", d => {
+                    console.log(d, d.output, "gate")
+
+                    if (d.id.indexOf('gate') > -1) {
+                        return sigmoidLine({from: d, to: d.output.to[0]})
+                    }
+                    else {
+                        return sigmoidLine({from: d, to: d.to[0]})
+                    }
+                })
+                .classed('line', true)
+                .style('stroke', "url(#areaGradient)")
+        })
+
+
+    }
+    Graph.connectLayers();
+    Graph.forwardPassAll();
+    drawGraphNodes(Graph.layers, svg)
+    drawGraphLinks(Graph.layers, svg)
 
     //OUT PUT of GATE
-    const outputG = svg.selectAll('.output').data([addGate.output])
-        .enter().append('g');
-
-
-    outputG.attr('transform', (d, i) => `translate(${d.x}, ${d.y})`) //-- g doesn't do x, y coords...translate needed
-    //NOW ALL CHILDREN ARE POSITIONED RELATIVE --- NO NEED TO SET ABSOLUTE VALUES
-
-    outputG.append('rect')
-        .attr('width', d => d.value)
-        .attr('id', d => d.id)
-        .attr('height', d => d.value)
-
-    outputG.append('text')
-        .attr("dy", ".35em")
-        .text(d => d.value)
+//    const outputG = svg.selectAll('.output').data([addGate.output])
+//        .enter().append('g');
+//
+//
+//    outputG.attr('transform', (d, i) => `translate(${d.x}, ${d.y})`) //-- g doesn't do x, y coords...translate needed
+//    //NOW ALL CHILDREN ARE POSITIONED RELATIVE --- NO NEED TO SET ABSOLUTE VALUES
+//
+//    outputG.append('rect')
+//        .attr('width', d => d.value)
+//        .attr('id', d => d.id)
+//        .attr('height', d => d.value)
+//
+//    outputG.append('text')
+//        .attr("dy", ".35em")
+//        .text(d => d.value)
 
 
     function update() {
@@ -345,11 +358,19 @@
         console.log(textNode.enter())
     }
 
-    const path1 = svg.selectAll('.line').data(startData).enter()
-        .append('path')
-        .attr("d", d => sigmoidLine({from: d, to: addGate}))
-        .classed('line', true)
-        .style('stroke', "url(#areaGradient)")
+    function sigmoidLine(d = { //draws the opposite way
+        from: {x: 100, y: 100},
+        to: {x: 500, y: 900}
+    }) { // topNode = parent, utop...
+        const f = d.from;
+        const t = d.to;
+        //TODO always start the path with the parent --> child
+        return "M" + f.x + "," + f.y
+            + "C" + (f.x + t.x) / 2 + "," + f.y
+            + " " + (f.x + t.x) / 2 + "," + t.y
+            + " " + t.x + "," + t.y;
+    };
+
 
     update();
 
