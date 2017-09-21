@@ -54,31 +54,59 @@
 <body>
 <script>
 
+    //TODO stuff that goes into the gate:
+    //....forward(nodes) /array
+    //this.inputNodes = nodes...
+    const Gate_add = class { //or call Neuron //TODO GATE extends Node ?
+        constructor(parameters) {
+            const presets = {
+                id: 'gate',
+                rectSize: 60,
+                x: 200,
+                y: 200,
+                from: [],
+                level: 2
+            }
+            //presets go on this and parameters override presets
+            Object.assign(this, presets, parameters)
+            this.x = this.level * 200 + 200;
+            this.output = new Node({ //only value transfer at this stage, no reference
+                from: this,
+                level: this.level + 1,
+                x: this.x,
+                id: `output`,
+                y: this.y //between the two
+            }, 0);
+        }
 
-    const Graph = {
-        treeHeight: 0
+        forward() {
+//            this.nodeA = this.from[0]
+//            this.nodeB = this.from[1]
+            this.y = this.from.reduce((acc, node) => acc + node.y, 0) / this.from.length;
+            this.outputVal = this.from.reduce((acc, node) => acc + node.value, 0);
+
+            this.output.value = this.outputVal;
+
+            //this.to = this.outputNode;
+
+            return this.output;
+        }
+
+        backward() {//derivative of xy ref x = x; that's why x ==> y
+            // take the gradient in output unit and chain it with the
+            // local gradients, which we derived for multiply gate before
+            // then write those gradients to those Units.
+            //TODO understand that these are all gradients!!!
+            //even latter in multgate nodeB.value = derivative von node.A
+            //VALUES get changed after a full backprop cycle
+            this.nodeA.gradient += 1 * this.outputNode.gradient; //f(x) = x + y; f`(x/dx) = 1 -- local gradient chained with outputgradient
+            this.nodeB.gradient += 1 * this.outputNode.gradient;
+        }
     }
 
-    //FIRST DATA LAYER === FEATURES!!
-    //2n LAYER === NEURONS' local OUTPUT!!
-    //last LAYER === yHat ...
-
-    //TODO BRUTE FORCE FIRST - BFF
-
-    const intInputs = [
-        3, //f1
-        -2, //f2
-        5,
-        6
-    ]
-
-
-    //TODO map into obj
-    //gradient --> derivative
-    //WIRE to NEURONS in next LAYER
-    //LET NEURONS forward PROP
-    //WIRE Wires to next layer
-    //when done...backpropagate in reverse layer order
+    //TODO BASEgate class ...multiply / addgate as extensions
+    //TODO GRAPh and nodes and gates only care about linking and graph
+    // TODO related stuff...x, y coordinates is a map function...value as well. Don't code it in the object....the object does the graph. Then there are valuemapping functions for paths, width etc
 
 
     //TODO wire is a dead, simple neuron without a functionality...just values and gradient
@@ -99,14 +127,25 @@
         }
 
         connectTo(target, source = this) { //by reference attention
-            this.to.push(target);
-            target.from.push(source)
-            if (!target.level) {
-                target.level = source.level + 1
+            if (this.to.indexOf(target) === -1) {
+                this.to.push(target);
             }
+            if(target.from.indexOf(source) === -1) {
+                target.from.push(source)
+                if (!target.level) {
+                    target.level = source.level + 1
+                }
+            }
+
         }
     };
 
+    const intInputs = [
+        3, //f1
+        -2, //f2
+        5,
+        6
+    ]
 
     const startData = intInputs.map((el, i) =>
         new Node({
@@ -118,6 +157,70 @@
 
         })
     )
+    const Graph = { //TODO make GRAPH a class....?
+        treeHeight: 0,
+        layers: [
+            [
+                ...startData
+            ],
+            [
+                new Gate_add()
+            ],
+            [
+                new Gate_add()
+            ]
+        ],
+        resultNode: new Node(
+            {
+                x: window.innerWidth * 0.8,
+                y: 500,
+                id: 'result',
+                value: null
+            }),
+        connectLayers(layers = this.layers) {
+            layers.forEach(function (layer, idx) {
+                if (idx >= layers.length-1) {
+                    return
+                }
+                layer.forEach(function (node) {
+                    if (node.id.indexOf('gate') > -1){
+                        layers[idx+1].forEach(next => node.output.connectTo(next, node.output))
+                    }
+                    else {
+                        layers[idx+1].forEach(next => node.connectTo(next, node)) //basically just case for the inputs...refactor...
+                    }
+                    console.log(node)
+                    console.log(layers[idx])
+                }) //connects all nodes with all gates next layer
+            })
+        },
+        connectNodes() {
+
+        },
+        forwardPassAll(layers = this.layers) { //all gates call forward()
+            //
+            for (let i = 1; i < layers.length; i++) {
+                layers[i].forEach(gate => gate.forward())
+            }
+        },
+
+        backwardPass() {
+        }
+    }
+
+    //FIRST DATA LAYER === FEATURES!!
+    //2n LAYER === NEURONS' local OUTPUT!!
+    //last LAYER === yHat ...
+
+    //TODO BRUTE FORCE FIRST - BFF
+
+
+    //TODO map into obj
+    //gradient --> derivative
+    //WIRE to NEURONS in next LAYER
+    //LET NEURONS forward PROP
+    //WIRE Wires to next layer
+    //when done...backpropagate in reverse layer order
 
     console.log(startData)
 
@@ -137,65 +240,12 @@
     };
 
 
-    //TODO stuff that goes into the gate:
-    //....forward(nodes) /array
-    //this.inputNodes = nodes...
-    const Gate_add = class { //or call Neuron //TODO GATE extends Node ?
-        constructor(parameters) {
-            const presets = {
-                id: 'gate' + Math.random().toFixed(4),
-                rectSize: 60,
-                x: 200,
-                y: 200,
-                from: [],
-                level: 2
-            }
-            //presets go on this and parameters override presets
-            Object.assign(this, presets, parameters)
-            this.x = this.level * 200 + 200;
-        }
-
-        forward() {
-            this.nodeA = this.from[0]
-            this.nodeB = this.from[1]
-            this.y = this.from.reduce((acc, node) => acc+node.y, 0)/this.from.length;
-            const outputVal = this.from.reduce((acc, node) => acc+node.value, 0);
-
-            this.output = new Node({ //only value transfer at this stage, no reference
-                value: outputVal,
-                from: this,
-                level: this.level + 1,
-                x: this.x,
-                id: `sum_${this.nodeA.id}${this.nodeB.id}`,
-                y: this.nodeA.y / 2 + this.nodeB.y / 2 //between the two
-            }, 0);
-
-            //this.to = this.outputNode;
-
-            return this.output;
-        }
-
-        backward() {//derivative of xy ref x = x; that's why x ==> y
-            // take the gradient in output unit and chain it with the
-            // local gradients, which we derived for multiply gate before
-            // then write those gradients to those Units.
-            //TODO understand that these are all gradients!!!
-            //even latter in multgate nodeB.value = derivative von node.A
-            //VALUES get changed after a full backprop cycle
-            this.nodeA.gradient += 1 * this.outputNode.gradient; //f(x) = x + y; f`(x/dx) = 1 -- local gradient chained with outputgradient
-            this.nodeB.gradient += 1 * this.outputNode.gradient;
-        }
-    }
-
-    //TODO BASEgate class ...multiply / addgate as extensions
-    //TODO GRAPh and nodes and gates only care about linking and graph 
-    // TODO related stuff...x, y coordinates is a map function...value as well. Don't code it in the object....the object does the graph. Then there are valuemapping functions for paths, width etc
-
-    const addGate = new Gate_add(2);
-    startData.forEach(d => d.connectTo(addGate))
+//    const addGate = new Gate_add(2);
+    console.log(startData, 'startData')
+//    startData.forEach(d => d.connectTo(addGate))
 
 
-    const outputAB = addGate.forward() //TODO make for multiple inputs [...data]
+//    const outputAB = addGate.forward() //TODO make for multiple inputs [...data]
 
     //TODO classes that go in arrays...with
 
@@ -224,6 +274,32 @@
     var svg = d3.select('body')
         .append('svg');
 
+    svg.style('width', window.innerWidth * 0.9 + 'px').style('height', window.innerHeight * 0.9 + 'px'); //+px for Firefox..chrome works/assumes
+
+
+    function drawGraphNodes(layers, container){
+        layers.forEach(function(layer){
+            let nodesG = svg.selectAll('gr').data(layer).enter().append('g').attr('transform', d => `translate(${d.x}, ${d.y})`)
+
+            const nodes = nodesG.append('rect')
+                .attr('width', d => 60)
+                .attr('height', d => 60)
+                .attr('id', d => 'node_' + d.id)
+                .attr('fill', "url(#areaGradient)")
+                .attr('stroke', 'grey')
+                .attr('stroke-opacity', '0.7')
+
+
+            let textNode = nodesG.append('text')
+                .attr("dx", d => +nodes.node().getAttribute('width') / 2)
+                .attr("dy", d => +nodes.node().getAttribute('height') / 2)
+                .classed('text', true)
+                .html(d => d.value || "A")
+        })
+    }
+
+    drawGraphNodes(Graph.layers, svg)
+
     const areaGradient = svg.append("defs")
         .append("linearGradient")
         .attr("id", "areaGradient")
@@ -232,7 +308,7 @@
 
     areaGradient.append("stop")
         .attr("offset", "0%")
-        .attr("stop-color", "orange")
+        .attr("stop-color", "blue")
         .attr("stop-opacity", 0.8);
     areaGradient.append("stop")
         .attr("offset", "120%")
@@ -240,55 +316,22 @@
         .attr("stop-opacity", 0.2);
 
 
-    svg.style('width', window.innerWidth * 0.9).style('height', window.innerHeight * 0.9); //style instead of attr
-
-
-    let nodesG = svg.selectAll('gr')
-        .data(startData)
-        .enter().append('g')
-        .attr('transform', d => `translate(${d.x}, ${d.y})`)
-
-    const nodes = nodesG.append('rect')
-        .attr('width', d => 60)
-        .attr('height', d => 60)
-        .attr('id', d => 'node_' + d.id)
-        .attr('fill', "url(#areaGradient)")
-        .attr('stroke', 'grey')
-        .attr('stroke-opacity', '0.7')
-
-
-    let textNode = nodesG.append('text')
-        .attr("dx", d => +nodes.node().getAttribute('width') / 2)
-        .attr("dy", d => +nodes.node().getAttribute('height') / 2)
-        .classed('text', true)
-        .html(d => d.value || "A")
-
-    const gates = svg.selectAll('.gates').data([addGate])
-        .enter().append('g')
-        .attr('transform', d => `translate(${d.x}, ${d.y})`)
-        .on('dragstart', d => console.log('hallo'))
-
-    const rect = gates.append('rect')
-        .attr('width', d => 60)
-        .attr('height', d => 60)
-
-
-    const text = gates.append("text") //TODO text always latest to be over other elems
-        .attr("dx", d => rect.attr('width') / 2)
-        .attr("dy", d => rect.attr('height') / 1.5)
-        .classed('text', true)
-        .text("+")
 
     console.log(text)
     console.log(gates)
 
-    const outputG = svg.selectAll('.output').data([outputAB])
-        .enter().append('g')
-        .attr('transform', (d, i) => `translate(${d.x}, ${d.y})`) //-- g doesn't do x, y coords...translate needed
+
+    //OUT PUT of GATE
+    const outputG = svg.selectAll('.output').data([addGate.output])
+        .enter().append('g');
+
+
+    outputG.attr('transform', (d, i) => `translate(${d.x}, ${d.y})`) //-- g doesn't do x, y coords...translate needed
     //NOW ALL CHILDREN ARE POSITIONED RELATIVE --- NO NEED TO SET ABSOLUTE VALUES
 
     outputG.append('rect')
         .attr('width', d => d.value)
+        .attr('id', d => d.id)
         .attr('height', d => d.value)
 
     outputG.append('text')
@@ -306,6 +349,7 @@
         .append('path')
         .attr("d", d => sigmoidLine({from: d, to: addGate}))
         .classed('line', true)
+        .style('stroke', "url(#areaGradient)")
 
     update();
 
@@ -313,11 +357,10 @@
         d3.selectAll(`#circle_${node.id}`)
             .style("fill-opacity", `${node.value / 20}`)
         console.log(outputG)
-        outputG
+        d3.select('#output')
             .attr('width', d => d.value)
             .attr('height', d => d.value)
         update();
-
     }
 
 

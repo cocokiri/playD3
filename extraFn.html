@@ -201,6 +201,43 @@
         circles.attr('cx', 50).attr('cy', (d, i) => i * 100).attr('r', d => +slider.property('value') / 10 * d)
     }
 
+
+    //
+
+    let nodesG = svg.selectAll('gr').data(startData).enter().append('g').attr('transform', d => `translate(${d.x}, ${d.y})`)
+
+    const nodes = nodesG.append('rect')
+        .attr('width', d => 60)
+        .attr('height', d => 60)
+        .attr('id', d => 'node_' + d.id)
+        .attr('fill', "url(#areaGradient)")
+        .attr('stroke', 'grey')
+        .attr('stroke-opacity', '0.7')
+
+
+    let textNode = nodesG.append('text')
+        .attr("dx", d => +nodes.node().getAttribute('width') / 2)
+        .attr("dy", d => +nodes.node().getAttribute('height') / 2)
+        .classed('text', true)
+        .html(d => d.value || "A")
+
+    const gates = svg.selectAll('.gates').data([addGate])
+        .enter().append('g')
+        .attr('transform', d => `translate(${d.x}, ${d.y})`)
+        .on('dragstart', d => console.log('hallo'))
+
+    const rect = gates.append('rect')
+        .attr('width', d => 60)
+        .attr('height', d => 60)
+
+
+    const text = gates.append("text") //TODO text always latest to be over other elems
+        .attr("dx", d => rect.attr('width') / 2)
+        .attr("dy", d => rect.attr('height') / 1.5)
+        .classed('text', true)
+        .text(d => "+" + d.output.value)
+
+
 </script>
 </body>
 </html>
