@@ -83,7 +83,7 @@
         forward() {
 //            this.nodeA = this.from[0]
 //            this.nodeB = this.from[1]
-            this.y = this.from.reduce((acc, node) => acc + node.y, 0) / this.from.length;
+            this.y = this.from.reduce((acc, node) => acc + node.y, 0) / this.from.length + 100;
             this.outputVal = this.from.reduce((acc, node) => acc + node.value, 0);
 
             this.output.value = this.outputVal;
@@ -142,10 +142,12 @@
     };
 
     const intInputs = [
-        3, //f1
-        -2, //f2
+        3, //f1, //f2
+        2,
         5,
-        6
+        8,
+        9
+
     ]
 
     const startData = intInputs.map((el, i) =>
@@ -153,7 +155,7 @@
             value: el,
             x: 200,
             id: 'feature_' + i,
-            y: 200 * i, //200 = spacing
+            y: 230 * i, //200 = spacing
             level: 0
 
         })
@@ -186,6 +188,7 @@
                 layer.forEach(function (node) {
                     if (node.id.indexOf('gate') > -1){
                         layers[idx+1].forEach(next => node.output.connectTo(next, node.output)) //node = gate
+                        node.to = node.output.to
                     }
                     else {
                         layers[idx+1].forEach(next => node.connectTo(next, node)) //basically just case for the inputs...refactor...
@@ -276,7 +279,7 @@
                 .attr('width', d => 60)
                 .attr('height', d => 60)
                 .attr('id', d => 'node_' + d.id)
-                .attr('fill', "url(#areaGradient)")
+                .attr('fill', "url(#gradientUp)")
                 .attr('stroke', 'grey')
                 .attr('stroke-opacity', '0.7')
 
@@ -288,20 +291,55 @@
                 .html(d => d.value || "A")
         })
     }
-    const areaGradient = svg.append("defs")
+    const gradientDown = svg.append("defs")
         .append("linearGradient")
-        .attr("id", "areaGradient")
+        .attr("id", "gradientDown")
         .attr("x1", "0%").attr("y1", "0%")
         .attr("x2", "0%").attr("y2", "100%");
 
-    areaGradient.append("stop")
+    gradientDown.append("stop")
         .attr("offset", "0%")
         .attr("stop-color", "blue")
+        .attr('class', 'motion')
         .attr("stop-opacity", 0.8);
-    areaGradient.append("stop")
-        .attr("offset", "120%")
+    gradientDown.append("stop")
+        .attr('offset', '50%')
+        .attr("stop-color", "red")
+        .attr("stop-opacity", 0.8);
+    gradientDown.append("stop")
+        .attr("offset", "100%")
         .attr("stop-color", "yellow")
-        .attr("stop-opacity", 0.2);
+        .attr("stop-opacity", 0.8);
+
+    const gradientUp = svg.append("defs")
+        .append("linearGradient")
+        .attr("id", "gradientUp")
+        .attr("x1", "0%").attr("y1", "100%")
+        .attr("x2", "0%").attr("y2", "0%")
+        .attr('xlink:href',"#gradientDown")
+
+    //x1="1" y1="1" x2="0" y2="0"></linearGradient>
+
+
+        let offset = 50;
+    let forward = true;
+
+    setInterval(function() {
+        if (forward) {
+            offset++
+        }
+        else {
+            offset--
+        }
+        if (offset>100) {
+            forward = false
+        }
+        else if (offset < 0){
+            forward = true
+        }
+
+        d3.select('.motion').attr("offset", offset+'%')
+    }, 20)
 
 
 
@@ -314,17 +352,15 @@
 
 
                 .attr("d", d => {
-                    console.log(d, d.output, "gate")
+                    console.log(d.from, d.to[0], "gate")
 
-                    if (d.id.indexOf('gate') > -1) {
-                        return sigmoidLine({from: d, to: d.output.to[0]})
-                    }
-                    else {
-                        return sigmoidLine({from: d, to: d.to[0]})
-                    }
+
+                    console.log('d,xx', d.y - d.to[0].y < 0)
+
+                    return sigmoidLine({from: d.to[0], to:d })
                 })
                 .classed('line', true)
-                .style('stroke', "url(#areaGradient)")
+                .style('stroke', d => d.y - d.to[0].y < 0 ? "url(#gradientDown)": "url(#gradientUp)")
         })
 
 
@@ -358,10 +394,7 @@
         console.log(textNode.enter())
     }
 
-    function sigmoidLine(d = { //draws the opposite way
-        from: {x: 100, y: 100},
-        to: {x: 500, y: 900}
-    }) { // topNode = parent, utop...
+    function sigmoidLine(d) { // topNode = parent, utop...
         const f = d.from;
         const t = d.to;
         //TODO always start the path with the parent --> child
