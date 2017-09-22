@@ -299,16 +299,29 @@
 
     gradientDown.append("stop")
         .attr("offset", "0%")
-        .attr("stop-color", "blue")
-        .attr('class', 'motion')
+        .attr("stop-color", "red")
         .attr("stop-opacity", 0.8);
     gradientDown.append("stop")
+        .attr('offset', '40%')
+        .attr('class', 'motionBefore')
+        .attr("stop-color", "red")
+        .attr("stop-opacity", 0.8);
+
+
+    gradientDown.append("stop")
         .attr('offset', '50%')
+        .attr('class', 'motion')
+        .attr("stop-color", "white")
+        .attr("stop-opacity", 1);
+
+    gradientDown.append("stop")
+        .attr('offset', '60%')
+        .attr('class', 'motionAfter')
         .attr("stop-color", "red")
         .attr("stop-opacity", 0.8);
     gradientDown.append("stop")
         .attr("offset", "100%")
-        .attr("stop-color", "yellow")
+        .attr("stop-color", "red")
         .attr("stop-opacity", 0.8);
 
     const gradientUp = svg.append("defs")
@@ -331,14 +344,20 @@
         else {
             offset--
         }
-        if (offset>100) {
+        if (offset>130) {
             forward = false
+            d3.select('.motion').attr("stop-color", 'purple')
+
         }
-        else if (offset < 0){
+        else if (offset < -30){
             forward = true
+            d3.select('.motion').attr("stop-color", 'yellow')
+
         }
 
         d3.select('.motion').attr("offset", offset+'%')
+        d3.select('.motionBefore').attr("offset", offset-15+'%')
+        d3.select('.motionAfter').attr("offset", offset+15+'%')
     }, 20)
 
 
