@@ -18,7 +18,7 @@
         }
 
         text {
-            font-size: 40px;
+            font-size: 22px;
             font-family: Helvetica;
             fill: white;
 
@@ -50,6 +50,7 @@
     </style>
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="./gradientSchabernak.js"></script>
+    <script src="./GradientHandler.js"></script>
 </head>
 <body>
 <script>
@@ -65,7 +66,8 @@
                 x: 200,
                 y: 200,
                 from: [],
-                level: 2
+                level: 2,
+                gradient:0
             }
             //presets go on this and parameters override presets
             Object.assign(this, presets, parameters)
@@ -73,20 +75,23 @@
             this.output = new Node({ //only value transfer at this stage, no reference
                 from: this,
                 level: this.level + 1,
+                gradient: this.gradient,
                 x: this.x,
                 id: `output`,
                 y: this.y, //between the two
-                to: []
+                to: [],
+                value: 0
             }, 0);
         }
 
         forward() {
 //            this.nodeA = this.from[0]
 //            this.nodeB = this.from[1]
-            this.y = this.from.reduce((acc, node) => acc + node.y, 0) / this.from.length + 100;
+//            this.y = this.from.reduce((acc, node) => acc + node.y, 0) / this.from.length + 100;
             this.outputVal = this.from.reduce((acc, node) => acc + node.value, 0);
 
             this.output.value = this.outputVal;
+            this.value = this.output.value;
 
             //this.to = this.outputNode;
 
@@ -100,8 +105,7 @@
             //TODO understand that these are all gradients!!!
             //even latter in multgate nodeB.value = derivative von node.A
             //VALUES get changed after a full backprop cycle
-            this.nodeA.gradient += 1 * this.outputNode.gradient; //f(x) = x + y; f`(x/dx) = 1 -- local gradient chained with outputgradient
-            this.nodeB.gradient += 1 * this.outputNode.gradient;
+            this.from.forEach(node => node.gradient += 1 * this.output.gradient); //f(x) = x + y; f`(x/dx) = 1 -- local gradient chained with outputgradient
         }
     }
 
@@ -131,7 +135,7 @@
             if (this.to.indexOf(target) === -1) {
                 this.to.push(target);
             }
-            if(target.from.indexOf(source) === -1) {
+            if (target.from.indexOf(source) === -1) {
                 target.from.push(source)
                 if (!target.level) {
                     target.level = source.level + 1
@@ -146,7 +150,6 @@
         2,
         5,
         8,
-        9
 
     ]
 
@@ -162,15 +165,17 @@
     )
     const Graph = { //TODO make GRAPH a class....?
         treeHeight: 0,
+        stepSize : 0.01,
         layers: [
             [
                 ...startData
             ],
             [
-                new Gate_add({level:2})
+                new Gate_add({level: 2, k:'zeroth'}),
+                new Gate_add({level: 2, y: 400, k: 'first'})
             ],
             [
-                new Gate_add({x: 900, y: 400, level:3})
+                new Gate_add({x: 900, y: 600, level: 3, gradient:1, k:'second'}) // initialize ouput grad at 1 otherwise multi with 0
             ]
         ],
         resultNode: new Node(
@@ -182,16 +187,16 @@
             }),
         connectLayers(layers = this.layers) {
             layers.forEach(function (layer, idx) {
-                if (idx >= layers.length-1) {
+                if (idx >= layers.length - 1) {
                     return
                 }
                 layer.forEach(function (node) {
-                    if (node.id.indexOf('gate') > -1){
-                        layers[idx+1].forEach(next => node.output.connectTo(next, node.output)) //node = gate
+                    if (node.id.indexOf('gate') > -1) {
+                        layers[idx + 1].forEach(next => node.output.connectTo(next, node.output)) //node = gate
                         node.to = node.output.to
                     }
                     else {
-                        layers[idx+1].forEach(next => node.connectTo(next, node)) //basically just case for the inputs...refactor...
+                        layers[idx + 1].forEach(next => node.connectTo(next, node)) //basically just case for the inputs...refactor...
                     }
                     console.log(node)
                     console.log(layers[idx])
@@ -208,7 +213,24 @@
             }
         },
 
-        backwardPass() {
+        backwardPassAll(layers = this.layers) {
+            for (let i = layers.length-1; i >= 1; i--) { //skip last (inputlayer nodes)
+                layers[i].forEach(gate => gate.backward())
+            }
+        },
+        adjustInputsToGradient(layers = this.layers){
+            const that= this;
+            layers.forEach(layer => layer.forEach(function(node) {
+                if (node.id === 'gate'){
+                    node.output.value += that.stepSize * node.output.gradient
+                    node.value += that.stepSize * node.gradient
+
+                } else {
+                    node.value +=  that.stepSize* node.gradient
+                }
+                console.log(node.id, node.value, node.gradient, node.k)
+            })
+        )
         }
     }
 
@@ -231,13 +253,12 @@
     //keep the neuron stupid
 
 
-
-//    const addGate = new Gate_add(2);
+    //    const addGate = new Gate_add(2);
     console.log(startData, 'startData')
-//    startData.forEach(d => d.connectTo(addGate))
+    //    startData.forEach(d => d.connectTo(addGate))
 
 
-//    const outputAB = addGate.forward() //TODO make for multiple inputs [...data]
+    //    const outputAB = addGate.forward() //TODO make for multiple inputs [...data]
 
     //TODO classes that go in arrays...with
 
@@ -269,146 +290,83 @@
     svg.style('width', window.innerWidth * 0.9 + 'px').style('height', window.innerHeight * 0.9 + 'px'); //+px for Firefox..chrome works/assumes
 
 
-    function drawGraphNodes(layers, container){
-        layers.forEach(function(layer){
+    function drawGraphNodes(layers, container) {
+        layers.forEach(function (layer) {
             let nodesG = svg.selectAll('gr').data(layer).enter()
                 .append('g')
                 .attr('transform', d => `translate(${d.x}, ${d.y})`)
 
+            const rectSize = 60;
             const nodes = nodesG.append('rect')
-                .attr('width', d => 60)
-                .attr('height', d => 60)
+                .attr('width', d => rectSize)
+                .attr('height', d => rectSize)
+                .attr('x', d=> -rectSize/2)
+                .attr('y', d=> -rectSize/2)
                 .attr('id', d => 'node_' + d.id)
-                .attr('fill', "url(#gradientUp)")
+                .attr('fill', "lightblue")
                 .attr('stroke', 'grey')
-                .attr('stroke-opacity', '0.7')
+                .attr('stroke-opacity', '0.5')
 
 
             let textNode = nodesG.append('text')
                 .attr("dx", d => +nodes.node().getAttribute('width') / 2)
-                .attr("dy", d => +nodes.node().getAttribute('height') / 2)
+                .attr("dy", d => +nodes.node().getAttribute('height') / 1.5)
+                .attr('x', d=> -rectSize/2)
+                .attr('y', d=> -rectSize/2)
                 .classed('text', true)
                 .html(d => d.value || "A")
         })
     }
-    const gradientDown = svg.append("defs")
-        .append("linearGradient")
-        .attr("id", "gradientDown")
-        .attr("x1", "0%").attr("y1", "0%")
-        .attr("x2", "0%").attr("y2", "100%");
-
-    gradientDown.append("stop")
-        .attr("offset", "0%")
-        .attr("stop-color", "red")
-        .attr("stop-opacity", 0.8);
-    gradientDown.append("stop")
-        .attr('offset', '40%')
-        .attr('class', 'motionBefore')
-        .attr("stop-color", "red")
-        .attr("stop-opacity", 0.8);
 
 
-    gradientDown.append("stop")
-        .attr('offset', '50%')
-        .attr('class', 'motion')
-        .attr("stop-color", "white")
-        .attr("stop-opacity", 1);
-
-    gradientDown.append("stop")
-        .attr('offset', '60%')
-        .attr('class', 'motionAfter')
-        .attr("stop-color", "red")
-        .attr("stop-opacity", 0.8);
-    gradientDown.append("stop")
-        .attr("offset", "100%")
-        .attr("stop-color", "red")
-        .attr("stop-opacity", 0.8);
-
-    const gradientUp = svg.append("defs")
-        .append("linearGradient")
-        .attr("id", "gradientUp")
-        .attr("x1", "0%").attr("y1", "100%")
-        .attr("x2", "0%").attr("y2", "0%")
-        .attr('xlink:href',"#gradientDown")
-
-    //x1="1" y1="1" x2="0" y2="0"></linearGradient>
+    const gg = new GradientLineAnim('red');
 
 
-        let offset = 50;
-    let forward = true;
+    function drawGraphLinks(layers, container) { //requires the nodes to be linked up
 
-    setInterval(function() {
-        if (forward) {
-            offset++
-        }
-        else {
-            offset--
-        }
-        if (offset>130) {
-            forward = false
-            d3.select('.motion').attr("stop-color", 'purple')
-
-        }
-        else if (offset < -30){
-            forward = true
-            d3.select('.motion').attr("stop-color", 'yellow')
-
-        }
-
-        d3.select('.motion').attr("offset", offset+'%')
-        d3.select('.motionBefore').attr("offset", offset-15+'%')
-        d3.select('.motionAfter').attr("offset", offset+15+'%')
-    }, 20)
-
-
-
-    function drawGraphLinks(layers, container){ //requires the nodes to be linked up
-
-        layers.forEach(function(layer,i){
+        layers.forEach(function (layer, i) {
             console.log(layer)
-            const path = svg.selectAll('.line' + i).data(layer).enter()
-                .append('path')
-
-
-                .attr("d", d => {
-                    console.log(d.from, d.to[0], "gate")
-
-
-                    console.log('d,xx', d.y - d.to[0].y < 0)
-
-                    return sigmoidLine({from: d.to[0], to:d })
-                })
-                .classed('line', true)
-                .style('stroke', d => d.y - d.to[0].y < 0 ? "url(#gradientDown)": "url(#gradientUp)")
+            const pathGroup = svg.append('g');
+            layer.forEach(function(node) {
+                if (node.to) {
+                    node.to.forEach(function (target) {
+                        pathGroup.append('path')
+                            .attr("d", sigmoidLine({from: node, to: target}))
+                            .classed('line', true)
+                            .style('stroke', node.y - target.y < 0 ? "url(#gradientDown)" : "url(#gradientUp)")
+                    })
+                }
+            })
         })
-
-
     }
+
     Graph.connectLayers();
     Graph.forwardPassAll();
-    drawGraphNodes(Graph.layers, svg)
+    Graph.backwardPassAll();
+    Graph.adjustInputsToGradient();
     drawGraphLinks(Graph.layers, svg)
 
+    drawGraphNodes(Graph.layers, svg)
+
     //OUT PUT of GATE
-//    const outputG = svg.selectAll('.output').data([addGate.output])
-//        .enter().append('g');
-//
-//
-//    outputG.attr('transform', (d, i) => `translate(${d.x}, ${d.y})`) //-- g doesn't do x, y coords...translate needed
-//    //NOW ALL CHILDREN ARE POSITIONED RELATIVE --- NO NEED TO SET ABSOLUTE VALUES
-//
-//    outputG.append('rect')
-//        .attr('width', d => d.value)
-//        .attr('id', d => d.id)
-//        .attr('height', d => d.value)
-//
-//    outputG.append('text')
-//        .attr("dy", ".35em")
-//        .text(d => d.value)
+    //    const outputG = svg.selectAll('.output').data([addGate.output])
+    //        .enter().append('g');
+    //
+    //
+    //    outputG.attr('transform', (d, i) => `translate(${d.x}, ${d.y})`) //-- g doesn't do x, y coords...translate needed
+    //    //NOW ALL CHILDREN ARE POSITIONED RELATIVE --- NO NEED TO SET ABSOLUTE VALUES
+    //
+    //    outputG.append('rect')
+    //        .attr('width', d => d.value)
+    //        .attr('id', d => d.id)
+    //        .attr('height', d => d.value)
+    //
+    //    outputG.append('text')
+    //        .attr("dy", ".35em")
+    //        .text(d => d.value)
 
 
     function update() {
-        outputG.select('rect').attr('height', d => d.value)
         textNode.html(d => Math.round(d.value));
         console.log(textNode.enter())
     }
@@ -419,17 +377,36 @@
         //TODO always start the path with the parent --> child
         return "M" + f.x + "," + f.y
             + "C" + (f.x + t.x) / 2 + "," + f.y
-            + " " + (f.x + t.x) / 2 + "," + t.y
-            + " " + t.x + "," + t.y;
+            + " " + (f.x + t.x) /1.9+ "," + t.y
+            + " " + t.x + "," + t.y // * (1 + (-0.5/20 + Math.random()/20))
     };
 
 
     update();
 
+
+    function updatePathThickness() {
+        
+    }
+
+    //2 gradients per layer --- to have non parallel anim....
+    function promiseLandFlow() {
+        //animate... layer/gradient 1,2
+        //forwardPassAll
+        //anim layer 2
+        //forwardpass
+        //anim backward last
+        //backwardPassall
+        //anim back n -1
+        //backward etc
+
+
+    }
+
+
     function updateNodeFromSlider(node) { //only update the
         d3.selectAll(`#circle_${node.id}`)
             .style("fill-opacity", `${node.value / 20}`)
-        console.log(outputG)
         d3.select('#output')
             .attr('width', d => d.value)
             .attr('height', d => d.value)
