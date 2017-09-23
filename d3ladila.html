@@ -49,102 +49,14 @@
         }
     </style>
     <script src="https://d3js.org/d3.v4.js"></script>
-    <script src="./gradientSchabernak.js"></script>
-    <script src="./GradientHandler.js"></script>
+    <script src="./GradientLineAnim.js"></script>
+    <script src="./Neuron.js"></script>
+    <script src="./Graph.js"></script>
 </head>
 <body>
 <script>
-
+//    import {GradientLineAnim} from './GradientLineAnim';
     //TODO stuff that goes into the gate:
-    //....forward(nodes) /array
-    //this.inputNodes = nodes...
-    const Gate_add = class { //or call Neuron //TODO GATE extends Node ?
-        constructor(parameters) {
-            const presets = {
-                id: 'gate',
-                rectSize: 60,
-                x: 200,
-                y: 200,
-                from: [],
-                level: 2,
-                gradient:0
-            }
-            //presets go on this and parameters override presets
-            Object.assign(this, presets, parameters)
-            this.x = this.level * 200 + 200;
-            this.output = new Node({ //only value transfer at this stage, no reference
-                from: this,
-                level: this.level + 1,
-                gradient: this.gradient,
-                x: this.x,
-                id: `output`,
-                y: this.y, //between the two
-                to: [],
-                value: 0
-            }, 0);
-        }
-
-        forward() {
-//            this.nodeA = this.from[0]
-//            this.nodeB = this.from[1]
-//            this.y = this.from.reduce((acc, node) => acc + node.y, 0) / this.from.length + 100;
-            this.outputVal = this.from.reduce((acc, node) => acc + node.value, 0);
-
-            this.output.value = this.outputVal;
-            this.value = this.output.value;
-
-            //this.to = this.outputNode;
-
-            return this.output;
-        }
-
-        backward() {//derivative of xy ref x = x; that's why x ==> y
-            // take the gradient in output unit and chain it with the
-            // local gradients, which we derived for multiply gate before
-            // then write those gradients to those Units.
-            //TODO understand that these are all gradients!!!
-            //even latter in multgate nodeB.value = derivative von node.A
-            //VALUES get changed after a full backprop cycle
-            this.from.forEach(node => node.gradient += 1 * this.output.gradient); //f(x) = x + y; f`(x/dx) = 1 -- local gradient chained with outputgradient
-        }
-    }
-
-    //TODO BASEgate class ...multiply / addgate as extensions
-    //TODO GRAPh and nodes and gates only care about linking and graph
-    // TODO related stuff...x, y coordinates is a map function...value as well. Don't code it in the object....the object does the graph. Then there are valuemapping functions for paths, width etc
-
-
-    //TODO wire is a dead, simple neuron without a functionality...just values and gradient
-    const Node = class { //saves in object to have memory off variables (assignment by reference)...
-        constructor(parameters) {
-            const presets = {
-                id: null,
-                value: 20,
-                gradient: 0,
-                x: 200,
-                y: 200,
-                from: [],
-                to: [],
-                level: null
-            }
-            //presets go on this and parameters override presets
-            Object.assign(this, presets, parameters)
-        }
-
-        connectTo(target, source = this) { //by reference attention
-            if (this.to.indexOf(target) === -1) {
-                this.to.push(target);
-            }
-            if (target.from.indexOf(source) === -1) {
-                target.from.push(source)
-                if (!target.level) {
-                    target.level = source.level + 1
-                }
-            }
-
-        }
-    };
-
     const intInputs = [
         3, //f1, //f2
         2,
@@ -163,64 +75,65 @@
 
         })
     )
-    const Graph = { //TODO make GRAPH a class....?
-        treeHeight: 0,
-        stepSize : 0.01,
-        layers: [
-            [
-                ...startData
-            ],
-            [
-                new Gate_add({level: 2, k:'zeroth'}),
-                new Gate_add({level: 2, y: 400, k: 'first'})
-            ],
-            [
-                new Gate_add({x: 900, y: 600, level: 3, gradient:1, k:'second'}) // initialize ouput grad at 1 otherwise multi with 0
-            ]
+
+const Graph = { //TODO make GRAPH a class....?
+    treeHeight: 0,
+    stepSize : 0.1,
+    layers: [
+        [
+            ...startData
         ],
-        resultNode: new Node(
-            {
-                x: window.innerWidth * 0.8,
-                y: 500,
-                id: 'result',
-                value: null
-            }),
-        connectLayers(layers = this.layers) {
-            layers.forEach(function (layer, idx) {
-                if (idx >= layers.length - 1) {
-                    return
+        [
+            new Gate_add({level: 2, k:'zeroth'}),
+            new Gate_add({level: 2, y: 400, k: 'first'})
+        ],
+        [
+            new Gate_add({x: 900, y: 600, level: 3, gradient:1, k:'second'}) // initialize ouput grad at 1 otherwise multi with 0
+        ]
+    ],
+    resultNode: new Node(
+        {
+            x: window.innerWidth * 0.8,
+            y: 500,
+            id: 'result',
+            value: null
+        }),
+    connectLayers(layers = this.layers) {
+        layers.forEach(function (layer, idx) {
+            if (idx >= layers.length - 1) {
+                return
+            }
+            layer.forEach(function (node) {
+                if (node.id.indexOf('gate') > -1) {
+                    layers[idx + 1].forEach(next => node.output.connectTo(next, node.output)) //node = gate
+                    node.to = node.output.to
                 }
-                layer.forEach(function (node) {
-                    if (node.id.indexOf('gate') > -1) {
-                        layers[idx + 1].forEach(next => node.output.connectTo(next, node.output)) //node = gate
-                        node.to = node.output.to
-                    }
-                    else {
-                        layers[idx + 1].forEach(next => node.connectTo(next, node)) //basically just case for the inputs...refactor...
-                    }
-                    console.log(node)
-                    console.log(layers[idx])
-                }) //connects all nodes with all gates next layer
-            })
-        },
-        connectNodes() {
+                else {
+                    layers[idx + 1].forEach(next => node.connectTo(next, node)) //basically just case for the inputs...refactor...
+                }
+                console.log(node)
+                console.log(layers[idx])
+            }) //connects all nodes with all gates next layer
+        })
+    },
+    connectNodes() {
 
-        },
-        forwardPassAll(layers = this.layers) { //all gates call forward()
-            //
-            for (let i = 1; i < layers.length; i++) {
-                layers[i].forEach(gate => gate.forward())
-            }
-        },
+    },
+    forwardPassAll(layers = this.layers) { //all gates call forward()
+        //
+        for (let i = 1; i < layers.length; i++) {
+            layers[i].forEach(gate => gate.forward())
+        }
+    },
 
-        backwardPassAll(layers = this.layers) {
-            for (let i = layers.length-1; i >= 1; i--) { //skip last (inputlayer nodes)
-                layers[i].forEach(gate => gate.backward())
-            }
-        },
-        adjustInputsToGradient(layers = this.layers){
-            const that= this;
-            layers.forEach(layer => layer.forEach(function(node) {
+    backwardPassAll(layers = this.layers) {
+        for (let i = layers.length-1; i >= 1; i--) { //skip last (inputlayer nodes)
+            layers[i].forEach(gate => gate.backward())
+        }
+    },
+    adjustInputsToGradient(layers = this.layers){
+        const that= this;
+        layers.forEach(layer => layer.forEach(function(node) {
                 if (node.id === 'gate'){
                     node.output.value += that.stepSize * node.output.gradient
                     node.value += that.stepSize * node.gradient
@@ -231,39 +144,14 @@
                 console.log(node.id, node.value, node.gradient, node.k)
             })
         )
-        }
     }
+}
 
-    //FIRST DATA LAYER === FEATURES!!
-    //2n LAYER === NEURONS' local OUTPUT!!
-    //last LAYER === yHat ...
+//FIRST DATA LAYER === FEATURES!!
+//2n LAYER === NEURONS' local OUTPUT!!
+//last LAYER === yHat ...
 
-    //TODO BRUTE FORCE FIRST - BFF
-
-
-    //TODO map into obj
-    //gradient --> derivative
-    //WIRE to NEURONS in next LAYER
-    //LET NEURONS forward PROP
-    //WIRE Wires to next layer
-    //when done...backpropagate in reverse layer order
-
-    console.log(startData)
-
-    //keep the neuron stupid
-
-
-    //    const addGate = new Gate_add(2);
-    console.log(startData, 'startData')
-    //    startData.forEach(d => d.connectTo(addGate))
-
-
-    //    const outputAB = addGate.forward() //TODO make for multiple inputs [...data]
-
-    //TODO classes that go in arrays...with
-
-
-    const l = startData //TODO replace with simple node drag to change value
+    startData //TODO replace with simple node drag to change value
         .map(createSlider)
         .map(e => document.body.appendChild(e))
 
@@ -319,7 +207,7 @@
     }
 
 
-    const gg = new GradientLineAnim('red');
+    const gradAnim = new GradientLineAnim('red');
 
 
     function drawGraphLinks(layers, container) { //requires the nodes to be linked up
@@ -347,24 +235,6 @@
     drawGraphLinks(Graph.layers, svg)
 
     drawGraphNodes(Graph.layers, svg)
-
-    //OUT PUT of GATE
-    //    const outputG = svg.selectAll('.output').data([addGate.output])
-    //        .enter().append('g');
-    //
-    //
-    //    outputG.attr('transform', (d, i) => `translate(${d.x}, ${d.y})`) //-- g doesn't do x, y coords...translate needed
-    //    //NOW ALL CHILDREN ARE POSITIONED RELATIVE --- NO NEED TO SET ABSOLUTE VALUES
-    //
-    //    outputG.append('rect')
-    //        .attr('width', d => d.value)
-    //        .attr('id', d => d.id)
-    //        .attr('height', d => d.value)
-    //
-    //    outputG.append('text')
-    //        .attr("dy", ".35em")
-    //        .text(d => d.value)
-
 
     function update() {
         textNode.html(d => Math.round(d.value));
@@ -402,6 +272,13 @@
 
 
     }
+
+function onEnter() {
+    this.attr("x", function(d, i) { return x(i + 1) - .5; })
+        .attr("y", function(d) { return h - y(d.value) - .5; })
+        .attr("width", w)
+        .attr("height", function(d) { return y(d.value); });
+}
 
 
     function updateNodeFromSlider(node) { //only update the

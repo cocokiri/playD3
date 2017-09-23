@@ -1,4 +1,4 @@
-const GradientLineAnim = class {
+ const GradientLineAnim = class {
     constructor(color) {
         this.container = d3.select('body').append('svg').attr('class', 'gradientContainer')
 
