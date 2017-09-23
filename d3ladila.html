@@ -60,11 +60,14 @@
 </head>
 <body>
 <script>
-    const startMatrix = new NeuralNet().matrix.map(el => el.map(function (num) {
+    //TODO get a MATRIX library or make one
+
+    const startMatrix = new NeuralNet().matrix.map((el, row) => el.map(function (num, col) {
+        const id = 'neuron' + "_" + num + '-' + col;
         if (num <= 0) {
-            return new Node({level: 0, value: Math.round(Math.random() * 10)})
+            return new Node({id: id, level: 0, value: Math.round(Math.random() * 10)})
         }
-        else return new Gate({level: num})
+        else return new Gate({id: id, level: num})
     }));
     const graph = new Graph(startMatrix)
     graph.matrix.forEach((layer, col) => layer.forEach((node, row) => Object.assign(node, posInMatrix(row, col)))) //add x,y values
@@ -73,10 +76,14 @@
         .map(createSlider)
         .map(e => document.body.appendChild(e))
 
-    const gradAnim = new GradientLineAnim('red');
     const svg = d3.select('body')
-        .append('svg');
-    svg.style('width', window.innerWidth * 0.9 + 'px').style('height', window.innerHeight * 0.9 + 'px'); //+px for Firefox..chrome works/assumes
+        .append('svg')
+        .attr('class', 'container')
+        .style('width', window.innerWidth * 0.9 + 'px')
+        .style('height', window.innerHeight * 0.9 + 'px'); //+px for Firefox..chrome works/assumes
+
+    const svg2 = d3.select('body').append('svg').style('width', 0).style('height', 0)
+    const gradAnim = new GradientLineAnim('red', svg2);
 
 
     drawGraphLinks(graph.matrix, svg)
@@ -95,21 +102,25 @@
         sl.addEventListener('input', function () {
             node.value = +sl.value / 5
             console.log(node.value)
-            updateNodeFromSlider(node)
+            updateText()
         })
         console.log(sl)
         return sl
     }
+
     function posInMatrix(row, col, offset = 300) {
         const xSpacing = 200;
         const ySpacing = 150;
         return {y: row * ySpacing + offset / 2, x: col * xSpacing + offset}
     }
+
     function drawGraphNodes(layers, container) {
         layers.forEach(function (layer, idxCol) {
             let nodesG = svg.selectAll('gr').data(layer).enter()
                 .append('g')
-                .attr('transform', (d) => `translate(${d.x},${d.y})`);
+                .attr('transform', (d) => `translate(${d.x},${d.y})`)
+                .attr('id', d => d.id)
+
 
             const rectSize = 60;
             const nodes = nodesG.append('rect')
@@ -131,6 +142,7 @@
                 .html(d => typeof d.value === 'number' ? d.value : "A") // 0 --> falsy value
         })
     }
+
     function drawGraphLinks(layers, container) { //requires the nodes to be linked up
         layers.forEach(function (layer, i) {
             console.log(layer)
@@ -147,30 +159,41 @@
             })
         })
     }
+
+    function updateText(matrix=graph.matrix){
+            matrix.forEach(layer => layer.forEach(node => d3.select('g#'+node.id).select('text').html(node.value.toFixed(1))))
+    }
+
     function sigmoidLine(d) { // topNode = parent, utop...
         const f = d.from;
         const t = d.to;
 
-//        if (f.y === t.y) {return `M${f.x},${f.y} L${t.x},${t.y}`}
+        if (f.y === t.y) {
+            return `M${f.x},${f.y} L${t.x},${t.y - 0.1}`
+        } //path invisible bug
         //TODO always start the path with the parent --> child
         return "M" + f.x + "," + f.y
             + "C" + (f.x + t.x) / 2 + "," + f.y
             + " " + (f.x + t.x) / 1.9 + "," + t.y
             + " " + t.x + "," + t.y // * (1 + (-0.5/20 + Math.random()/20))
     };
+
     function updatePathThickness() {
 
     }
+
     //2 gradients per layer --- to have non parallel anim....
     function promiseLandFlow() {
         gradAnim.animateGradient('forward')
             .then(function () {
                 graph.forwardPassAll();
+                updateText()
                 gradAnim.animateGradient('backward')
                     .then(function () {
-
+                        updateText()
                         graph
                             .backwardPassAll()
+
                             .adjustInputsToGradient();
 
                         promiseLandFlow();

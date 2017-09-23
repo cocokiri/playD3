@@ -1,10 +1,4 @@
-
 //TODO BASEgate class ...multiply / addgate as extensions
-//TODO GRAPh and nodes and gates only care about linking and graph
-// TODO related stuff...x, y coordinates is a map function...value as well. Don't code it in the object....the object does the graph. Then there are valuemapping functions for paths, width etc
-
-
-//TODO wire is a dead, simple neuron without a functionality...just values and gradient
 const Node = class { //saves in object to have memory off variables (assignment by reference)...
     constructor(parameters) {
         const presets = {

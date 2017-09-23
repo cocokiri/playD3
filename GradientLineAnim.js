@@ -1,11 +1,11 @@
- const GradientLineAnim = class {
-    constructor(color) {
-        this.container = d3.select('body').append('svg').attr('class', 'gradientContainer')
+const GradientLineAnim = class {
+    constructor(color, container) {
+        this.container = container;
 
         this.grad1 = this.container.append('defs').append("linearGradient")
             .attr("id", "gradientDown")
             .attr("x1", "0%").attr("y1", "0%")
-            .attr("x2", "0%").attr("y2", "100%");
+            .attr("x2", "100%").attr("y2", "0%");
 
         this.grad1.append("stop")
             .attr("offset", "0%")
@@ -53,7 +53,7 @@
 
         return new Promise(function (resolve, reject) {
             const anim = window.setInterval(function () {
-                let director= 0;
+                let director = 0;
                 if (direction === 'forward') {
                     timer++;
                 }
@@ -62,9 +62,9 @@
                     director = 100;
                 }
                 const perc = timer / units * 100;
-                d3.select('.motion').attr("offset",director+ perc + '%')
-                d3.select('.motionBefore').attr("offset", director+perc - 15 + '%')
-                d3.select('.motionAfter').attr("offset", director+perc + 15 + '%')
+                that.stop1.attr("offset", director + perc + '%')
+                that.stop2.attr("offset", director + perc - 15 + '%')
+                that.stop3.attr("offset", director + perc + 15 + '%')
 
 
                 if (Math.abs(timer) > units) {
@@ -73,7 +73,5 @@
                 }
             }, frames)
         })
-
-
     }
 }
