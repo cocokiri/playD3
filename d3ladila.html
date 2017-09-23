@@ -52,10 +52,11 @@
     <script src="./GradientLineAnim.js"></script>
     <script src="./Neuron.js"></script>
     <script src="./Graph.js"></script>
+    <script src="./NeuralNet.js"></script>
 </head>
 <body>
 <script>
-//    import {GradientLineAnim} from './GradientLineAnim';
+    //    import {GradientLineAnim} from './GradientLineAnim';
     //TODO stuff that goes into the gate:
     const intInputs = [
         3, //f1, //f2
@@ -76,80 +77,58 @@
         })
     )
 
-const Graph = { //TODO make GRAPH a class....?
-    treeHeight: 0,
-    stepSize : 0.1,
-    layers: [
-        [
-            ...startData
+    const Graph = { //TODO make GRAPH a class....?
+        treeHeight: 0,
+        stepSize: 0.1,
+        layers: [
+            [
+                ...startData //features
+            ],
+            [
+                new Gate({level: 2}),
+                new Gate({level: 2, y: 400})
+            ],
+            [
+                new Gate({x: 900, y: 600, level: 3, gradient: 1}) // initialize ouput grad at 1 otherwise multi with 0
+            ]
         ],
-        [
-            new Gate_add({level: 2, k:'zeroth'}),
-            new Gate_add({level: 2, y: 400, k: 'first'})
-        ],
-        [
-            new Gate_add({x: 900, y: 600, level: 3, gradient:1, k:'second'}) // initialize ouput grad at 1 otherwise multi with 0
-        ]
-    ],
-    resultNode: new Node(
-        {
-            x: window.innerWidth * 0.8,
-            y: 500,
-            id: 'result',
-            value: null
-        }),
-    connectLayers(layers = this.layers) {
-        layers.forEach(function (layer, idx) {
-            if (idx >= layers.length - 1) {
-                return
-            }
-            layer.forEach(function (node) {
-                if (node.id.indexOf('gate') > -1) {
-                    layers[idx + 1].forEach(next => node.output.connectTo(next, node.output)) //node = gate
-                    node.to = node.output.to
+        connectLayers(layers = this.layers) {
+            layers.forEach(function (layer, idx) {
+                if (idx >= layers.length - 1) {
+                    return
                 }
-                else {
+                layer.forEach(function (node) {
                     layers[idx + 1].forEach(next => node.connectTo(next, node)) //basically just case for the inputs...refactor...
-                }
-                console.log(node)
-                console.log(layers[idx])
-            }) //connects all nodes with all gates next layer
-        })
-    },
-    connectNodes() {
-
-    },
-    forwardPassAll(layers = this.layers) { //all gates call forward()
-        //
-        for (let i = 1; i < layers.length; i++) {
-            layers[i].forEach(gate => gate.forward())
-        }
-    },
-
-    backwardPassAll(layers = this.layers) {
-        for (let i = layers.length-1; i >= 1; i--) { //skip last (inputlayer nodes)
-            layers[i].forEach(gate => gate.backward())
-        }
-    },
-    adjustInputsToGradient(layers = this.layers){
-        const that= this;
-        layers.forEach(layer => layer.forEach(function(node) {
-                if (node.id === 'gate'){
-                    node.output.value += that.stepSize * node.output.gradient
-                    node.value += that.stepSize * node.gradient
-
-                } else {
-                    node.value +=  that.stepSize* node.gradient
-                }
-                console.log(node.id, node.value, node.gradient, node.k)
+                }) //connects all nodes with all gates next layer
             })
-        )
-    }
-}
+            return this
+        },
+        forwardPassAll(layers = this.layers) { //all gates call forward()
+            //
+            for (let i = 1; i < layers.length; i++) {
+                layers[i].forEach(gate => gate.forward())
+            }
+            return this
+        },
 
-//FIRST DATA LAYER === FEATURES!!
-//2n LAYER === NEURONS' local OUTPUT!!
-//last LAYER === yHat ...
+        backwardPassAll(layers = this.layers) {
+            for (let i = layers.length - 1; i >= 1; i--) { //skip last (inputlayer nodes)
+                layers[i].forEach(gate => gate.backward())
+            }
+            return this
+        },
+        adjustInputsToGradient(layers = this.layers) {
+            const that = this;
+            layers.forEach(layer => layer.forEach(function (node) {
+                    node.value += that.stepSize * node.gradient
+                })
+            )
+            return this;
+
+        }
+    }
+
+    const initalMatrix = new NeuralNet().matrix;
 
     startData //TODO replace with simple node drag to change value
         .map(createSlider)
@@ -177,7 +156,6 @@ const Graph = { //TODO make GRAPH a class....?
 
     svg.style('width', window.innerWidth * 0.9 + 'px').style('height', window.innerHeight * 0.9 + 'px'); //+px for Firefox..chrome works/assumes
 
-
     function drawGraphNodes(layers, container) {
         layers.forEach(function (layer) {
             let nodesG = svg.selectAll('gr').data(layer).enter()
@@ -186,21 +164,21 @@ const Graph = { //TODO make GRAPH a class....?
 
             const rectSize = 60;
             const nodes = nodesG.append('rect')
+                .attr('x', d => -rectSize / 2)
+                .attr('y', d => -rectSize / 2)
                 .attr('width', d => rectSize)
                 .attr('height', d => rectSize)
-                .attr('x', d=> -rectSize/2)
-                .attr('y', d=> -rectSize/2)
                 .attr('id', d => 'node_' + d.id)
                 .attr('fill', "lightblue")
                 .attr('stroke', 'grey')
                 .attr('stroke-opacity', '0.5')
 
 
-            let textNode = nodesG.append('text')
+            let textNodes = nodesG.append('text')
                 .attr("dx", d => +nodes.node().getAttribute('width') / 2)
                 .attr("dy", d => +nodes.node().getAttribute('height') / 1.5)
-                .attr('x', d=> -rectSize/2)
-                .attr('y', d=> -rectSize/2)
+                .attr('x', d => -rectSize / 2)
+                .attr('y', d => -rectSize / 2)
                 .classed('text', true)
                 .html(d => d.value || "A")
         })
@@ -215,7 +193,7 @@ const Graph = { //TODO make GRAPH a class....?
         layers.forEach(function (layer, i) {
             console.log(layer)
             const pathGroup = svg.append('g');
-            layer.forEach(function(node) {
+            layer.forEach(function (node) {
                 if (node.to) {
                     node.to.forEach(function (target) {
                         pathGroup.append('path')
@@ -228,18 +206,14 @@ const Graph = { //TODO make GRAPH a class....?
         })
     }
 
-    Graph.connectLayers();
-    Graph.forwardPassAll();
-    Graph.backwardPassAll();
-    Graph.adjustInputsToGradient();
+    Graph.connectLayers()
+        .forwardPassAll()
+        .backwardPassAll()
+        .adjustInputsToGradient();
+
     drawGraphLinks(Graph.layers, svg)
 
     drawGraphNodes(Graph.layers, svg)
-
-    function update() {
-        textNode.html(d => Math.round(d.value));
-        console.log(textNode.enter())
-    }
 
     function sigmoidLine(d) { // topNode = parent, utop...
         const f = d.from;
@@ -247,49 +221,28 @@ const Graph = { //TODO make GRAPH a class....?
         //TODO always start the path with the parent --> child
         return "M" + f.x + "," + f.y
             + "C" + (f.x + t.x) / 2 + "," + f.y
-            + " " + (f.x + t.x) /1.9+ "," + t.y
+            + " " + (f.x + t.x) / 1.9 + "," + t.y
             + " " + t.x + "," + t.y // * (1 + (-0.5/20 + Math.random()/20))
     };
 
-
-    update();
-
-
     function updatePathThickness() {
-        
+
     }
 
     //2 gradients per layer --- to have non parallel anim....
     function promiseLandFlow() {
-        //animate... layer/gradient 1,2
-        //forwardPassAll
-        //anim layer 2
-        //forwardpass
-        //anim backward last
-        //backwardPassall
-        //anim back n -1
-        //backward etc
-
-
+        gradAnim.animateGradient('forward')
+            .then(function () {
+                Graph.forwardPassAll();
+                gradAnim.animateGradient('backward')
+                    .then(function () {
+                        Graph.backwardPassAll()
+                        promiseLandFlow();
+                    })
+            })
     }
 
-function onEnter() {
-    this.attr("x", function(d, i) { return x(i + 1) - .5; })
-        .attr("y", function(d) { return h - y(d.value) - .5; })
-        .attr("width", w)
-        .attr("height", function(d) { return y(d.value); });
-}
-
-
-    function updateNodeFromSlider(node) { //only update the
-        d3.selectAll(`#circle_${node.id}`)
-            .style("fill-opacity", `${node.value / 20}`)
-        d3.select('#output')
-            .attr('width', d => d.value)
-            .attr('height', d => d.value)
-        update();
-    }
-
+    promiseLandFlow()
 
 </script>
 </html>
