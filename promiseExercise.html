@@ -1,0 +1,46 @@
+<html>
+<body>
+<script>
+
+    const x = function() {
+        return new Promise(function(res, rej){
+
+
+            setTimeout(function(){
+                console.log('promise one resolved')
+                res();
+            }, 1000)
+        })
+    }
+
+    const y = function() {
+        return new Promise(function(res, rej){
+
+
+            setTimeout(function(){
+                console.log('promise two resolved')
+                res();
+            }, 2000)
+        })
+    }
+
+    const z = function() {
+        return new Promise(function(res, rej){
+
+
+            setTimeout(function(){
+                console.log('promise three resolved')
+                res();
+            }, 1000)
+        })
+    }
+
+//    x().then(() => y().then(() => z()))
+
+    const promiseWrappers = [x,y,z];
+    promiseWrappers.reduce((prev, cur) => prev.then(cur), Promise.resolve()).then(() => x())
+
+
+</script>
+</body>
+</html>

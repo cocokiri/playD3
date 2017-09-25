@@ -82,12 +82,23 @@
         .style('width', window.innerWidth * 0.9 + 'px')
         .style('height', window.innerHeight * 0.9 + 'px'); //+px for Firefox..chrome works/assumes
 
-    const svg2 = d3.select('body').append('svg').style('width', 0).style('height', 0)
-    const gradAnim = new GradientLineAnim('red', svg2);
-
 
     drawGraphLinks(graph.matrix, svg)
     drawGraphNodes(graph.matrix, svg)
+
+    const svg2 = d3.select('body').append('svg').style('width', 0).style('height', 0)
+    const gradAnims = [];
+    graph.matrix.forEach((layer, col) => gradAnims.push(new GradientLineAnim('red', svg2, col)));
+    gradAnims.pop(); //3 layers ==> 2 connections
+
+
+    const animForwWrapper = gradAnims.map(el => function () {
+        return el.animateGradient('forward')
+    })
+    const animBackWrapper = gradAnims.map(el => function () {
+        return el.animateGradient('backward')
+    }).reverse()
+
     promiseLandFlow() //action
 
 
@@ -129,7 +140,7 @@
                 .attr('width', d => rectSize)
                 .attr('height', d => rectSize)
                 .attr('id', d => 'node_' + d.id)
-                .attr('fill', "lightblue")
+                .attr('fill', "hsla(259, 80%, 63%, 1)")
                 .attr('stroke', 'grey')
                 .attr('stroke-opacity', '0.5')
 
@@ -144,7 +155,7 @@
     }
 
     function drawGraphLinks(layers, container) { //requires the nodes to be linked up
-        layers.forEach(function (layer, i) {
+        layers.forEach(function (layer, column) {
             console.log(layer)
             const pathGroup = svg.append('g');
             layer.forEach(function (node) {
@@ -153,15 +164,17 @@
                         pathGroup.append('path')
                             .attr("d", sigmoidLine({from: node, to: target}))
                             .classed('line', true)
-                            .style('stroke', node.y - target.y < 0 ? "url(#gradientDown)" : "url(#gradientUp)")
+                            .style('stroke', node.y - target.y < 0 ? `url(#gradientDown${column})` : `url(#gradientUp${column})`)
+                            .style('stroke-width', 4)
+                            .style('stroke-opacity', 0.8)
                     })
                 }
             })
         })
     }
 
-    function updateText(matrix=graph.matrix){
-            matrix.forEach(layer => layer.forEach(node => d3.select('g#'+node.id).select('text').html(node.value.toFixed(1))))
+    function updateText(matrix = graph.matrix) {
+        matrix.forEach(layer => layer.forEach(node => d3.select('g#' + node.id).select('text').html(node.value.toFixed(1))))
     }
 
     function sigmoidLine(d) { // topNode = parent, utop...
@@ -182,18 +195,20 @@
 
     }
 
-    //2 gradients per layer --- to have non parallel anim....
+
+    //    2 gradients per layer --- to have non parallel anim....
     function promiseLandFlow() {
-        gradAnim.animateGradient('forward')
+
+        animForwWrapper.reduce((prev, cur) => prev.then(cur), Promise.resolve())
             .then(function () {
                 graph.forwardPassAll();
                 updateText()
-                gradAnim.animateGradient('backward')
+
+                animBackWrapper.reduce((prev, cur) => prev.then(cur), Promise.resolve())
                     .then(function () {
                         updateText()
                         graph
                             .backwardPassAll()
-
                             .adjustInputsToGradient();
 
                         promiseLandFlow();

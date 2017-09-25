@@ -4,7 +4,6 @@
     <list default="true" id="79ba1a1f-8bd8-4064-855b-b40a03d4b83b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GradientLineAnim.js" afterPath="$PROJECT_DIR$/GradientLineAnim.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Neuron.js" afterPath="$PROJECT_DIR$/Neuron.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/d3ladila.html" afterPath="$PROJECT_DIR$/d3ladila.html" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -17,6 +16,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="playD3" />
   </component>
@@ -25,40 +25,21 @@
       <file leaf-file-name="d3ladila.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/d3ladila.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="62" column="43" lean-forward="false" selection-start-line="62" selection-start-column="43" selection-end-line="62" selection-end-column="43" />
+            <state relative-caret-position="176">
+              <caret line="102" column="0" lean-forward="true" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
               <folding>
                 <element signature="e#54#117#0" expanded="false" />
                 <element signature="e#134#169#0" expanded="false" />
-                <element signature="e#185#274#0" expanded="false" />
-                <element signature="e#473#567#0" expanded="false" />
-                <element signature="e#654#756#0" expanded="false" />
-                <element signature="e#777#812#0" expanded="false" />
-                <element signature="e#833#934#0" expanded="false" />
-                <element signature="e#3034#3177#0" expanded="false" />
-                <element signature="e#5802#5810#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Graph.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Graph.js">
+      <file leaf-file-name="promiseExercise.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/promiseExercise.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="43" column="1" lean-forward="false" selection-start-line="43" selection-start-column="1" selection-end-line="43" selection-end-column="1" />
-              <folding>
-                <element signature="e#652#678#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NeuralNet.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/NeuralNet.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="40" lean-forward="false" selection-start-line="3" selection-start-column="40" selection-end-line="3" selection-end-column="40" />
+            <state relative-caret-position="462">
+              <caret line="40" column="91" lean-forward="false" selection-start-line="40" selection-start-column="91" selection-end-line="40" selection-end-column="91" />
               <folding />
             </state>
           </provider>
@@ -77,8 +58,8 @@
       <file leaf-file-name="GradientLineAnim.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GradientLineAnim.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="45" lean-forward="false" selection-start-line="7" selection-start-column="45" selection-end-line="7" selection-end-column="45" />
+            <state relative-caret-position="428">
+              <caret line="66" column="61" lean-forward="false" selection-start-line="66" selection-start-column="61" selection-end-line="66" selection-end-column="61" />
               <folding />
             </state>
           </provider>
@@ -88,9 +69,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>outputG</find>
-      <find>outputAB</find>
-      <find>path</find>
       <find>nodesG</find>
       <find>linefn</find>
       <find>.line</find>
@@ -118,6 +96,9 @@
       <find>update</find>
       <find>startData</find>
       <find>gradanim</find>
+      <find>gradient</find>
+      <find>gradan</find>
+      <find>str</find>
     </findStrings>
     <replaceStrings>
       <replace>value</replace>
@@ -140,6 +121,8 @@
         <option value="$PROJECT_DIR$/NeuralNet.js" />
         <option value="$PROJECT_DIR$/Graph.js" />
         <option value="$PROJECT_DIR$/Neuron.js" />
+        <option value="$PROJECT_DIR$/extraFn copy.html" />
+        <option value="$PROJECT_DIR$/promiseExercise.html" />
         <option value="$PROJECT_DIR$/GradientLineAnim.js" />
         <option value="$PROJECT_DIR$/d3ladila.html" />
       </list>
@@ -160,8 +143,8 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="y" value="23" />
-    <option name="width" value="1894" />
-    <option name="height" value="973" />
+    <option name="width" value="1440" />
+    <option name="height" value="794" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -178,19 +161,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="playD3" type="b2602c69:ProjectViewProjectNode" />
-              <item name="playD3" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
+      <pane id="Scratches" />
+      <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -338,11 +311,15 @@
       <workItem from="1506207775954" duration="1670000" />
       <workItem from="1506209576747" duration="2000" />
       <workItem from="1506209579793" duration="1027000" />
+      <workItem from="1506328755521" duration="5000" />
+      <workItem from="1506328762476" duration="1610000" />
+      <workItem from="1506330566993" duration="2000" />
+      <workItem from="1506330571130" duration="1315000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="77949000" />
+    <option name="totallyTimeSpent" value="80881000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -354,10 +331,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1894" height="973" extended-state="0" />
+    <frame x="0" y="23" width="1440" height="794" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17898627" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17829457" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -370,13 +347,14 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32963374" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="processedProjectFiles" value="true" />
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -386,32 +364,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/d3ladila.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#54#117#0" expanded="false" />
-            <element signature="e#134#169#0" expanded="false" />
-            <element signature="e#185#274#0" expanded="false" />
-            <element signature="e#473#567#0" expanded="false" />
-            <element signature="e#654#756#0" expanded="false" />
-            <element signature="e#777#812#0" expanded="false" />
-            <element signature="e#833#934#0" expanded="false" />
-            <element signature="e#3034#3177#0" expanded="false" />
-            <element signature="e#5802#5810#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Neuron.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="37" column="20" lean-forward="false" selection-start-line="37" selection-start-column="20" selection-end-line="37" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/GradientLineAnim.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1185">
@@ -427,13 +379,6 @@
           <folding>
             <element signature="e#54#117#0" expanded="false" />
             <element signature="e#134#169#0" expanded="false" />
-            <element signature="e#185#274#0" expanded="false" />
-            <element signature="e#473#567#0" expanded="false" />
-            <element signature="e#654#756#0" expanded="false" />
-            <element signature="e#777#812#0" expanded="false" />
-            <element signature="e#833#934#0" expanded="false" />
-            <element signature="e#3034#3177#0" expanded="false" />
-            <element signature="e#5802#5810#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -461,13 +406,6 @@
           <folding>
             <element signature="e#54#117#0" expanded="false" />
             <element signature="e#134#169#0" expanded="false" />
-            <element signature="e#185#274#0" expanded="false" />
-            <element signature="e#473#567#0" expanded="false" />
-            <element signature="e#654#756#0" expanded="false" />
-            <element signature="e#777#812#0" expanded="false" />
-            <element signature="e#833#934#0" expanded="false" />
-            <element signature="e#3034#3177#0" expanded="false" />
-            <element signature="e#5802#5810#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -495,38 +433,13 @@
           <folding>
             <element signature="e#54#117#0" expanded="false" />
             <element signature="e#134#169#0" expanded="false" />
-            <element signature="e#185#274#0" expanded="false" />
-            <element signature="e#473#567#0" expanded="false" />
-            <element signature="e#654#756#0" expanded="false" />
-            <element signature="e#777#812#0" expanded="false" />
-            <element signature="e#833#934#0" expanded="false" />
-            <element signature="e#3034#3177#0" expanded="false" />
-            <element signature="e#5802#5810#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Graph.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1695">
-          <caret line="113" column="3" lean-forward="false" selection-start-line="113" selection-start-column="3" selection-end-line="120" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/js/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3690">
-          <caret line="246" column="10" lean-forward="false" selection-start-line="246" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Graph.js" />
+    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html" />
+    <entry file="file://$PROJECT_DIR$/../testing/js/index.js" />
     <entry file="file://$PROJECT_DIR$/GradientLineAnim.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1185">
@@ -542,31 +455,12 @@
           <folding>
             <element signature="e#54#117#0" expanded="false" />
             <element signature="e#134#169#0" expanded="false" />
-            <element signature="e#185#274#0" expanded="false" />
-            <element signature="e#473#567#0" expanded="false" />
-            <element signature="e#654#756#0" expanded="false" />
-            <element signature="e#777#812#0" expanded="false" />
-            <element signature="e#833#934#0" expanded="false" />
-            <element signature="e#3034#3177#0" expanded="false" />
-            <element signature="e#5802#5810#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Graph.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1695">
-          <caret line="113" column="3" lean-forward="false" selection-start-line="113" selection-start-column="3" selection-end-line="120" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Graph.js" />
+    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html" />
     <entry file="file://$PROJECT_DIR$/GradientLineAnim.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1185">
@@ -575,13 +469,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/js/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3690">
-          <caret line="246" column="10" lean-forward="false" selection-start-line="246" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../testing/js/index.js" />
     <entry file="file://$PROJECT_DIR$/d3ladila.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -589,38 +477,13 @@
           <folding>
             <element signature="e#54#117#0" expanded="false" />
             <element signature="e#134#169#0" expanded="false" />
-            <element signature="e#185#274#0" expanded="false" />
-            <element signature="e#473#567#0" expanded="false" />
-            <element signature="e#654#756#0" expanded="false" />
-            <element signature="e#777#812#0" expanded="false" />
-            <element signature="e#833#934#0" expanded="false" />
-            <element signature="e#3034#3177#0" expanded="false" />
-            <element signature="e#5802#5810#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Graph.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1695">
-          <caret line="113" column="3" lean-forward="false" selection-start-line="113" selection-start-column="3" selection-end-line="120" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/js/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3690">
-          <caret line="246" column="10" lean-forward="false" selection-start-line="246" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Graph.js" />
+    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html" />
+    <entry file="file://$PROJECT_DIR$/../testing/js/index.js" />
     <entry file="file://$PROJECT_DIR$/GradientLineAnim.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1185">
@@ -636,31 +499,12 @@
           <folding>
             <element signature="e#54#117#0" expanded="false" />
             <element signature="e#134#169#0" expanded="false" />
-            <element signature="e#185#274#0" expanded="false" />
-            <element signature="e#473#567#0" expanded="false" />
-            <element signature="e#654#756#0" expanded="false" />
-            <element signature="e#777#812#0" expanded="false" />
-            <element signature="e#833#934#0" expanded="false" />
-            <element signature="e#3034#3177#0" expanded="false" />
-            <element signature="e#5802#5810#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Graph.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1695">
-          <caret line="113" column="3" lean-forward="false" selection-start-line="113" selection-start-column="3" selection-end-line="120" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Graph.js" />
+    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html" />
     <entry file="file://$PROJECT_DIR$/GradientLineAnim.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1185">
@@ -669,13 +513,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/js/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3690">
-          <caret line="246" column="10" lean-forward="false" selection-start-line="246" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../testing/js/index.js" />
     <entry file="file://$PROJECT_DIR$/d3ladila.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -683,31 +521,12 @@
           <folding>
             <element signature="e#54#117#0" expanded="false" />
             <element signature="e#134#169#0" expanded="false" />
-            <element signature="e#185#274#0" expanded="false" />
-            <element signature="e#473#567#0" expanded="false" />
-            <element signature="e#654#756#0" expanded="false" />
-            <element signature="e#777#812#0" expanded="false" />
-            <element signature="e#833#934#0" expanded="false" />
-            <element signature="e#3034#3177#0" expanded="false" />
-            <element signature="e#5802#5810#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1695">
-          <caret line="113" column="3" lean-forward="false" selection-start-line="113" selection-start-column="3" selection-end-line="120" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/js/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3690">
-          <caret line="246" column="10" lean-forward="false" selection-start-line="246" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html" />
+    <entry file="file://$PROJECT_DIR$/../testing/js/index.js" />
     <entry file="file://$PROJECT_DIR$/GradientLineAnim.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1185">
@@ -723,31 +542,12 @@
           <folding>
             <element signature="e#54#117#0" expanded="false" />
             <element signature="e#134#169#0" expanded="false" />
-            <element signature="e#185#274#0" expanded="false" />
-            <element signature="e#473#567#0" expanded="false" />
-            <element signature="e#654#756#0" expanded="false" />
-            <element signature="e#777#812#0" expanded="false" />
-            <element signature="e#833#934#0" expanded="false" />
-            <element signature="e#3034#3177#0" expanded="false" />
-            <element signature="e#5802#5810#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1695">
-          <caret line="113" column="3" lean-forward="false" selection-start-line="113" selection-start-column="3" selection-end-line="120" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/js/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3690">
-          <caret line="246" column="10" lean-forward="false" selection-start-line="246" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html" />
+    <entry file="file://$PROJECT_DIR$/../testing/js/index.js" />
     <entry file="file://$PROJECT_DIR$/GradientLineAnim.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1185">
@@ -763,81 +563,20 @@
           <folding>
             <element signature="e#54#117#0" expanded="false" />
             <element signature="e#134#169#0" expanded="false" />
-            <element signature="e#185#274#0" expanded="false" />
-            <element signature="e#473#567#0" expanded="false" />
-            <element signature="e#654#756#0" expanded="false" />
-            <element signature="e#777#812#0" expanded="false" />
-            <element signature="e#833#934#0" expanded="false" />
-            <element signature="e#3034#3177#0" expanded="false" />
-            <element signature="e#5802#5810#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/GradientHandler.js" />
-    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1695">
-          <caret line="113" column="3" lean-forward="false" selection-start-line="113" selection-start-column="3" selection-end-line="120" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/js/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3690">
-          <caret line="246" column="10" lean-forward="false" selection-start-line="246" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html" />
+    <entry file="file://$PROJECT_DIR$/../testing/js/index.js" />
     <entry file="file://$PROJECT_DIR$/GradientHandler.js" />
     <entry file="file://$PROJECT_DIR$/GradientLineAnim copy.js" />
-    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="824">
-          <caret line="113" column="3" lean-forward="false" selection-start-line="113" selection-start-column="3" selection-end-line="120" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../testing/js/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2239">
-          <caret line="246" column="10" lean-forward="false" selection-start-line="246" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../because/search.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="579" column="36" lean-forward="false" selection-start-line="579" selection-start-column="36" selection-end-line="579" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/GradientLineAnim.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="45" lean-forward="false" selection-start-line="7" selection-start-column="45" selection-end-line="7" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/NeuralNet.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="40" lean-forward="false" selection-start-line="3" selection-start-column="40" selection-end-line="3" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Graph.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="43" column="1" lean-forward="false" selection-start-line="43" selection-start-column="1" selection-end-line="43" selection-end-column="1" />
-          <folding>
-            <element signature="e#652#678#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../testing/gradientStroke.html" />
+    <entry file="file://$PROJECT_DIR$/../testing/js/index.js" />
+    <entry file="file://$PROJECT_DIR$/../because/search.js" />
+    <entry file="file://$PROJECT_DIR$/NeuralNet.js" />
+    <entry file="file://$PROJECT_DIR$/Graph.js" />
     <entry file="file://$PROJECT_DIR$/Neuron.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -846,20 +585,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/extraFn copy.html" />
+    <entry file="file://$PROJECT_DIR$/promiseExercise.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="40" column="91" lean-forward="false" selection-start-line="40" selection-start-column="91" selection-end-line="40" selection-end-column="91" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GradientLineAnim.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="428">
+          <caret line="66" column="61" lean-forward="false" selection-start-line="66" selection-start-column="61" selection-end-line="66" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/d3ladila.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="62" column="43" lean-forward="false" selection-start-line="62" selection-start-column="43" selection-end-line="62" selection-end-column="43" />
+        <state relative-caret-position="176">
+          <caret line="102" column="0" lean-forward="true" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
           <folding>
             <element signature="e#54#117#0" expanded="false" />
             <element signature="e#134#169#0" expanded="false" />
-            <element signature="e#185#274#0" expanded="false" />
-            <element signature="e#473#567#0" expanded="false" />
-            <element signature="e#654#756#0" expanded="false" />
-            <element signature="e#777#812#0" expanded="false" />
-            <element signature="e#833#934#0" expanded="false" />
-            <element signature="e#3034#3177#0" expanded="false" />
-            <element signature="e#5802#5810#0" expanded="false" />
           </folding>
         </state>
       </provider>
