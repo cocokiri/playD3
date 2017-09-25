@@ -35,12 +35,13 @@ const Node = class { //saves in object to have memory off variables (assignment 
 };
 
 class Gate extends Node { //TODO otherwise all methods are inside 1 node class...multgate, addgate, tanh
-    constructor(parameters){
+    constructor(parameters) {
         super();
         Object.assign(this, parameters)
         this.x = this.level * 200 + 200;
 
     }
+
     forward() {
         if (this.from.length < 1) {
             console.warn('forward on node without inputs??')
@@ -56,6 +57,70 @@ class Gate extends Node { //TODO otherwise all methods are inside 1 node class..
         //TODO understand that these are all gradients!!!
         //VALUES get changed after a full backprop cycle
         this.from.forEach(node => node.gradient += 1 * this.gradient); //f(x) = x + y; f`(x/dx) = 1 -- local gradient chained with outputgradient
+        console.log(this.gradient, this.level, this.id)
+
         return this;
+    }
+}
+
+class SigGate extends Gate {
+    constructor(parameters) {
+        super();
+        Object.assign(this, parameters)
+        this.x = this.level * 200 + 200;
+        this.value;
+    }
+
+    sigFn(x) {
+        return 1 / (1 + Math.exp(-x)).toFixed(2);
+    }
+
+    forward() {
+        if (this.from.length > 1) {
+            console.error('Sigmoid gate with to many inputs')
+        }
+        this.value = this.sigFn(this.from[0].value);
+        return this;
+    }
+
+    backward() {
+        const s = this.sigFn(this.value);
+
+        this.from[0].gradient += (s * (1 - s)) * this.gradient;
+        console.log(this.gradient, this.from, this.level, this.id)
+    }
+}
+
+class MultGate extends Gate {
+    constructor(parameters) {
+        super();
+        Object.assign(this, parameters)
+        this.x = this.level * 200 + 200;
+    }
+    forward() {
+        if (this.from.length < 1) {
+            console.warn('forward on node without inputs??')
+        }
+        this.value = this.from.reduce((acc, node) => acc * node.value, 1);
+        return this;
+    }
+    backward() {
+        const that = this;
+        this.from.forEach((node,idx) => {
+            const derivative = that.arrayProductExcludeIdx(that.from, idx);
+            console.log(derivative, that.gradient, node.id)
+            node.gradient += derivative * that.gradient
+        }); //f(x) = x + y; f`(x/dx) = 1 -- local gradient chained with outputgradient
+        return this;
+    }
+    arrayProductExcludeIdx(arr, idx = 0) { //multiply everything except me (derivative) for product
+        return arr.reduce(function(acc, val, i) {
+            if (i !== idx) {
+                return acc * val.value
+            }
+            else {
+                return 1
+            }
+        }, 1)
     }
 }

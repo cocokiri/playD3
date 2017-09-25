@@ -62,17 +62,78 @@
 <script>
     //TODO get a MATRIX library or make one
 
-    const startMatrix = new NeuralNet().matrix.map((el, row) => el.map(function (num, col) {
-        const id = 'neuron' + "_" + num + '-' + col;
-        if (num <= 0) {
-            return new Node({id: id, level: 0, value: Math.round(Math.random() * 10)})
-        }
-        else return new Gate({id: id, level: num})
-    }));
-    const graph = new Graph(startMatrix)
+    const kaparthyExampleInputs = [
+        1, 2, -1, -3, 3
+    ]
+
+    //a,x connect to gate1
+    //b, y connect to gate2
+    //next layer
+    //ax and by connect to addgate1
+    //axby and c connect to add gate
+    //axbyc connect to siggate
+
+    const karpathyInputs = {
+        a: 1, //a
+        w1: -1, //x
+        b: 2, //b
+        w2: 3, // y
+        c: -3 //c
+    }
+
+    let inputNodes= [];
+    for (let prop in karpathyInputs) {
+        inputNodes.push(new Node({value: karpathyInputs[prop], id: prop.toString()}))
+    }
+    console.log(inputNodes) //first layers
+    //second layer
+
+    firstlayer = [
+        new MultGate({level:1}),
+        new MultGate({level:1})
+    ]
+    secondlayer = [
+        new Gate({level:2})
+    ]
+
+    thirdlayer = [
+        new Gate({level:3})
+    ]
+    fourthlayer = [
+        new SigGate({level:4})
+    ]
+
+
+    inputNodes[0].connectTo(firstlayer[0])
+    inputNodes[1].connectTo(firstlayer[0])
+
+    inputNodes[2].connectTo(firstlayer[1])
+    inputNodes[3].connectTo(firstlayer[1])
+
+    inputNodes[4].connectTo(thirdlayer[0])
+
+    firstlayer[0].connectTo(secondlayer[0])
+    firstlayer[1].connectTo(secondlayer[0])
+
+    secondlayer[0].connectTo(thirdlayer[0])
+
+    thirdlayer[0].connectTo(fourthlayer[0])
+
+
+
+    const customMatrix = [
+        inputNodes,
+        firstlayer,
+        secondlayer,
+        thirdlayer,
+        fourthlayer
+    ]
+
+
+    const graph = new Graph(customMatrix);
     graph.matrix.forEach((layer, col) => layer.forEach((node, row) => Object.assign(node, posInMatrix(row, col)))) //add x,y values
 
-    startMatrix[0] //TODO replace with simple node drag to change value
+    customMatrix[0] //TODO replace with simple node drag to change value
         .map(createSlider)
         .map(e => document.body.appendChild(e))
 
@@ -119,9 +180,9 @@
         return sl
     }
 
-    function posInMatrix(row, col, offset = 300) {
-        const xSpacing = 200;
-        const ySpacing = 150;
+    function posInMatrix(row, col, offset = 100) {
+        const xSpacing = 140;
+        const ySpacing = 80;
         return {y: row * ySpacing + offset / 2, x: col * xSpacing + offset}
     }
 
@@ -214,6 +275,17 @@
                         promiseLandFlow();
                     })
             })
+    }
+
+    function configureNet() {
+        const startMatrix = new NeuralNet().matrix.map((el, row) => el.map(function (num, col) {
+            const id = 'neuron' + "_" + num + '-' + col;
+            if (num <= 0) {
+                return new Node({id: id, level: 0, value: Math.round(Math.random() * 10)})
+            }
+            else return new Gate({id: id, level: num})
+        }));
+        return startMatrix;
     }
 
 

@@ -4,7 +4,6 @@ const Graph = class{
 
         this.matrix = matrix;
         this.matrix[this.matrix.length-1][0].gradient = 1; //output gradient
-        this.connectLayers()
     }
     connectLayers(matrix = this.matrix) {
         matrix.forEach(function (layer, idx) {
