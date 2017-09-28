@@ -34,7 +34,7 @@ const Graph = class{
     adjustInputsToGradient(matrix = this.matrix) {
         const that = this;
         matrix.forEach(layer => layer.forEach(function (node) {
-                node.value += that.stepSize * node.gradient
+                node.weight += that.stepSize * node.gradient
             })
         )
         return this;

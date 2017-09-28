@@ -162,10 +162,10 @@
 
 
     const animForwWrapper = gradAnims.map(el => function () {
-        return el.animateGradient('forward')
+        return el.animateGradient('forward', 100)
     })
     const animBackWrapper = gradAnims.map(el => function () {
-        return el.animateGradient('backward')
+        return el.animateGradient('backward',100)
     }).reverse()
 
     promiseLandFlow() //action
@@ -242,9 +242,10 @@
                     node.to.forEach(function (target) {
                         pathGroup.append('path')
                             .attr("d", sigmoidLine({from: node, to: target}))
+                            .attr("id", 'path' + node.id)
                             .classed('line', true)
                             .style('stroke', node.y - target.y < 0 ? `url(#gradientDown${column})` : `url(#gradientUp${column})`)
-                            .style('stroke-width', 4)
+                            .style('stroke-width', Math.abs(node.weight * 2))
                             .style('stroke-opacity', 0.8)
                     })
                 }
@@ -258,6 +259,13 @@
 
             group.select('text').html(node.value.toFixed(2))
             group.select('text#grad').html(node.gradient.toFixed(2))
+        }))
+    }
+
+    function updateLinks(matrix = graph.matrix) {
+        matrix.forEach(layer => layer.forEach(node => {
+            const path = d3.select('#path' + node.id);
+            path.style('stroke-width', Math.abs(node.weight*4))
         }))
     }
 
@@ -275,9 +283,6 @@
             + " " + t.x + "," + t.y // * (1 + (-0.5/20 + Math.random()/20))
     };
 
-    function updatePathThickness() {
-
-    }
 
 
     //    2 gradients per layer --- to have non parallel anim....
@@ -288,6 +293,8 @@
             .then(function () {
                 graph.forwardPassAll();
                 updateText()
+                updateLinks()
+//                drawGraphLinks()
 
                 animBackWrapper.reduce((prev, cur) => prev.then(cur), Promise.resolve())
                     .then(function () {

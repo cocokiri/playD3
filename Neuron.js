@@ -3,14 +3,15 @@ const Node = class { //saves in object to have memory off variables (assignment 
     constructor(parameters) {
         const presets = {
             id: 'neuron',
-            value: 20,
+            value: 0,
             rectSize: 60,
             gradient: 0,
             x: 200, //TODO factor out ...visual representation is confusing for graph logic
             y: 200,
             from: [],
             to: [],
-            level: 0
+            level: 0,
+            weight:1
         }
 
         //presets go on this and parameters override presets
@@ -46,7 +47,7 @@ class Gate extends Node { //TODO otherwise all methods are inside 1 node class..
         if (this.from.length < 1) {
             console.warn('forward on node without inputs??')
         }
-        this.value = this.from.reduce((acc, node) => acc + node.value, 0);
+        this.value = this.from.reduce((acc, node) => acc + node.value * node.weight, 0);
         return this;
     }
 
@@ -77,12 +78,12 @@ class SigGate extends Gate {
         if (this.from.length > 1) {
             console.error('Sigmoid gate with to many inputs')
         }
-        this.value = this.sigFn(this.from[0].value);
+        this.value = this.sigFn(this.from[0].value * this.weight);
         return this;
     }
 
     backward() {
-        const s = this.sigFn(this.value);
+        const s = this.sigFn(this.value*this.weight);
 
         this.from[0].gradient += (s * (1 - s)) * this.gradient;
     }
@@ -98,7 +99,7 @@ class MultGate extends Gate {
         if (this.from.length < 1) {
             console.warn('forward on node without inputs??')
         }
-        this.value = this.from.reduce((acc, node) => acc * node.value, 1);
+        this.value = this.from.reduce((acc, node) => acc * (node.value*node.weight), 1);
         return this;
     }
     backward() {
@@ -112,7 +113,7 @@ class MultGate extends Gate {
     arrayProductExcludeIdx(arr, idx = 0) { //multiply everything except me (derivative) for product
         return arr.reduce(function(acc, val, i) {
             if (i !== idx) {
-                return acc * val.value
+                return acc * val.value * val.weight
             }
             else {
                 return 1
