@@ -57,8 +57,6 @@ class Gate extends Node { //TODO otherwise all methods are inside 1 node class..
         //TODO understand that these are all gradients!!!
         //VALUES get changed after a full backprop cycle
         this.from.forEach(node => node.gradient += 1 * this.gradient); //f(x) = x + y; f`(x/dx) = 1 -- local gradient chained with outputgradient
-        console.log(this.gradient, this.level, this.id)
-
         return this;
     }
 }
@@ -87,7 +85,6 @@ class SigGate extends Gate {
         const s = this.sigFn(this.value);
 
         this.from[0].gradient += (s * (1 - s)) * this.gradient;
-        console.log(this.gradient, this.from, this.level, this.id)
     }
 }
 
@@ -108,7 +105,6 @@ class MultGate extends Gate {
         const that = this;
         this.from.forEach((node,idx) => {
             const derivative = that.arrayProductExcludeIdx(that.from, idx);
-            console.log(derivative, that.gradient, node.id)
             node.gradient += derivative * that.gradient
         }); //f(x) = x + y; f`(x/dx) = 1 -- local gradient chained with outputgradient
         return this;

@@ -26,6 +26,15 @@
             text-align: center;
         }
 
+        .gradientText {
+            font-size: 14px;
+            font-family: Helvetica;
+            fill: black;
+
+            text-anchor: middle;
+            text-align: center;
+        }
+
         circle {
             fill: blue;
             stroke: orange;
@@ -81,7 +90,7 @@
         c: -3 //c
     }
 
-    let inputNodes= [];
+    let inputNodes = [];
     for (let prop in karpathyInputs) {
         inputNodes.push(new Node({value: karpathyInputs[prop], id: prop.toString()}))
     }
@@ -89,18 +98,18 @@
     //second layer
 
     firstlayer = [
-        new MultGate({level:1}),
-        new MultGate({level:1})
+        new MultGate({level: 1, id: 'gate1'}),
+        new MultGate({level: 1, id: 'gate2'})
     ]
     secondlayer = [
-        new Gate({level:2})
+        new Gate({level: 2, id: 'gate3'})
     ]
 
     thirdlayer = [
-        new Gate({level:3})
+        new Gate({level: 3, id: 'gate4'})
     ]
     fourthlayer = [
-        new SigGate({level:4})
+        new SigGate({level: 4, id: 'gate5'})
     ]
 
 
@@ -118,7 +127,6 @@
     secondlayer[0].connectTo(thirdlayer[0])
 
     thirdlayer[0].connectTo(fourthlayer[0])
-
 
 
     const customMatrix = [
@@ -212,7 +220,17 @@
                 .attr('y', d => -rectSize / 2)
                 .classed('text', true)
                 .html(d => typeof d.value === 'number' ? d.value : "A") // 0 --> falsy value
+
+            let gradientTip = nodesG.append('text')
+                .attr("dx", d => +nodes.node().getAttribute('width') / 2)
+                .attr("dy", d => +nodes.node().getAttribute('height') / 2.5)
+                .attr('x', d => -rectSize / 2)
+                .attr('y', d => -rectSize / 2)
+                .attr('id', d => 'grad')
+                .classed('gradientText', true)
+                .html(d => typeof d.gradient === 'number' ? d.gradient : "A")
         })
+
     }
 
     function drawGraphLinks(layers, container) { //requires the nodes to be linked up
@@ -235,7 +253,12 @@
     }
 
     function updateText(matrix = graph.matrix) {
-        matrix.forEach(layer => layer.forEach(node => d3.select('g#' + node.id).select('text').html(node.value.toFixed(1))))
+        matrix.forEach(layer => layer.forEach(node => {
+            const group = d3.select('g#' + node.id);
+
+            group.select('text').html(node.value.toFixed(2))
+            group.select('text#grad').html(node.gradient.toFixed(2))
+        }))
     }
 
     function sigmoidLine(d) { // topNode = parent, utop...
@@ -259,6 +282,7 @@
 
     //    2 gradients per layer --- to have non parallel anim....
     function promiseLandFlow() {
+        updateText()
 
         animForwWrapper.reduce((prev, cur) => prev.then(cur), Promise.resolve())
             .then(function () {
